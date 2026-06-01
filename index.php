@@ -60,32 +60,10 @@ require_once __DIR__ . '/includes/head.php';
   .industry-item:hover { transform: translateY(-5px); border-color: #5cb85c; }
   .industry-item h3 { font-size: 1.2rem; font-weight: 700; margin: 0; color: #333; }
 
-  /* Logo Slider Styles */
-  .logo-slider {
-    overflow: hidden;
-    padding: 40px 0;
-    position: relative;
-  }
-  .logo-track {
-    display: flex;
-    width: calc(250px * 10);
-    animation: scroll 40s linear infinite;
-  }
-  .logo-track:hover { animation-play-state: paused; }
-  @keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(calc(-250px * 5)); }
-  }
-  .logo-slide {
-    width: 250px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .logo-slide img {
-    max-height: 80px;
-    max-width: 180px;
-    object-fit: contain;
+  .featured-logos img {
+    max-height: 60px;
+    margin: 20px;
+    transition: 0.3s;
   }
 </style>
 </head>
@@ -132,100 +110,11 @@ require_once __DIR__ . '/includes/head.php';
         </div>
       </div>
     </section>
-
-    <!-- Tenders & Events -->
-    <section class="py-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-             <h3 class="mb-4" style="color: #28a745;">Latest Tenders</h3>
-             <div id="tenders-container"></div>
-          </div>
-          <div class="col-md-6">
-             <h3 class="mb-4" style="color: #28a745;">Upcoming Events</h3>
-             <div id="events-container"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
   </main>
 
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/main.js"></script>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Fetch Industries (Top level)
-        fetch('api/public/industries.php')
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const list = document.getElementById('industries-list');
-                    list.innerHTML = data.data.slice(0, 6).map(ind => `
-                        <div class="col-lg-4 col-md-6">
-                            <a href="find-suppliers?type=${ind.slug}" class="text-decoration-none">
-                                <div class="industry-item">
-                                    <h3>${ind.name}</h3>
-                                </div>
-                            </a>
-                        </div>
-                    `).join('');
-                }
-            });
-
-        // Fetch Featured Companies for Slider
-        fetch('api/public/companies.php?featured=1')
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const track = document.getElementById('featured-slider');
-                    // Duplicate logos for smooth infinite scroll
-                    const items = [...data.data, ...data.data];
-                    track.innerHTML = items.map(c => `
-                        <div class="logo-slide">
-                            <img src="${c.logo || 'assets/img/industry-logo-20.png'}" alt="${c.name}">
-                        </div>
-                    `).join('');
-                }
-            });
-
-        // Tenders
-        fetch('api/public/tenders.php?limit=5')
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    document.getElementById('tenders-container').innerHTML = data.data.map(t => `
-                        <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>${t.title}</strong><br>
-                                <small class="text-muted">Closing: ${t.closing_date}</small>
-                            </div>
-                            <a href="#" class="btn btn-sm btn-outline-success">View</a>
-                        </div>
-                    `).join('');
-                }
-            });
-
-        // Events
-        fetch('api/public/events.php?limit=5')
-            .then(res => res.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    document.getElementById('events-container').innerHTML = data.data.map(e => `
-                        <div class="p-3 border-bottom">
-                            <div class="d-flex justify-content-between">
-                                <strong>${e.title}</strong>
-                                <span class="badge bg-success">${e.event_date}</span>
-                            </div>
-                            <small class="text-muted">${e.location}</small>
-                        </div>
-                    `).join('');
-                }
-            });
-    });
-  </script>
 </body>
 </html>
