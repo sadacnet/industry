@@ -60,7 +60,7 @@ try {
         }
     }
     $stmt->execute();
-    
+
     $tenders = $stmt->fetchAll();
 
     // Add calculated fields
@@ -70,7 +70,7 @@ try {
         $interval = $today->diff($closingDate);
         $tender['days_remaining'] = $closingDate >= $today ? $interval->days : -$interval->days;
         $tender['is_expired'] = $closingDate < $today;
-        
+
         // Ensure all fields exist (even if null)
         $tender['tender_number'] = $tender['tender_number'] ?? null;
         $tender['issuing_organization'] = $tender['issuing_organization'] ?? null;

@@ -5,7 +5,7 @@
         <h3>📄 Tenders Management</h3>
         <button class="btn btn-primary" onclick="openAddModal()">+ Add New Tender</button>
     </div>
-    
+
     <table id="tendersTable">
         <thead>
             <tr>
@@ -29,7 +29,7 @@
         <h3 id="modalTitle">Add New Tender</h3>
         <form id="tenderForm">
             <input type="hidden" id="tenderId">
-            
+
             <div class="row">
                 <div class="col-md-8">
                     <div class="form-group"><label>Tender Title *</label><input type="text" id="title" class="form-control" required></div>
@@ -38,7 +38,7 @@
                     <div class="form-group"><label>Tender Number</label><input type="text" id="tender_number" class="form-control" placeholder="e.g., ZIM/2026/001"></div>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group"><label>Issuing Organization *</label><input type="text" id="issuing_organization" class="form-control" placeholder="e.g., Ministry of Mines"></div>
@@ -63,9 +63,9 @@
                     <div class="form-group"><label>Budget (USD)</label><input type="number" id="budget" class="form-control" step="0.01" placeholder="Optional"></div>
                 </div>
             </div>
-            
+
             <div class="form-group"><label>Description</label><textarea id="description" class="form-control" rows="3"></textarea></div>
-            
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group"><label>Location</label><input type="text" id="location" class="form-control" placeholder="e.g., Harare"></div>
@@ -74,7 +74,7 @@
                     <div class="form-group"><label>Contact Email</label><input type="email" id="contact_email" class="form-control"></div>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group"><label>Contact Phone</label><input type="text" id="contact_phone" class="form-control"></div>
@@ -86,10 +86,10 @@
                     <div class="form-group"><label>Bid Opening Date</label><input type="date" id="bid_opening_date" class="form-control"></div>
                 </div>
             </div>
-            
+
             <div class="form-group"><label>Submission Requirements</label><textarea id="submission_requirements" class="form-control" rows="2" placeholder="e.g., Company profile, tax clearance, references..."></textarea></div>
             <div class="form-group"><label>Eligibility Criteria</label><textarea id="eligibility_criteria" class="form-control" rows="2" placeholder="e.g., Registered with relevant body, minimum 5 years experience..."></textarea></div>
-            
+
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group"><label>Document 1 URL</label><input type="text" id="document_url" class="form-control" placeholder="uploads/documents/..."></div>
@@ -101,13 +101,13 @@
                     <div class="form-group"><label>Document 3 URL</label><input type="text" id="document_url3" class="form-control"></div>
                 </div>
             </div>
-            
+
             <div class="row mt-3">
                 <div class="col-md-6">
                     <div class="form-group"><label>Status</label><select id="is_active" class="form-select"><option value="1">Active</option><option value="0">Inactive</option></select></div>
                 </div>
             </div>
-            
+
             <div class="form-actions">
                 <button type="button" class="btn" onclick="closeModal()">Cancel</button>
                 <button type="submit" class="btn btn-primary">Save Tender</button>
@@ -211,7 +211,7 @@ document.getElementById('tenderForm').addEventListener('submit', async function(
         document_url3: document.getElementById('document_url3').value,
         is_active: document.getElementById('is_active').value
     };
-    
+
     const url = id ? `/industry.co.zw/admin/api/tenders.php?id=${id}` : '/industry.co.zw/admin/api/tenders.php';
     const method = id ? 'PUT' : 'POST';
     const res = await fetch(url, {method, headers:{'Content-Type':'application/json'}, body:JSON.stringify(formData)});

@@ -22,29 +22,29 @@ try {
         $stmt = $db->prepare($query);
         $stmt->execute();
         $products = $stmt->fetchAll();
-        
+
         // Parse exports_to and certifications for frontend
         foreach ($products as &$p) {
             $p['exports_to'] = $p['exports_to'] ? explode(',', $p['exports_to']) : [];
             $p['certifications'] = $p['certifications'] ? explode(',', $p['certifications']) : [];
         }
-        
+
         http_response_code(200);
         echo json_encode(["status" => "success", "data" => $products]);
     }
 
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $input = json_decode(file_get_contents('php://input'), true);
-        
+
         if (!isset($input['product_name']) || empty($input['product_name'])) {
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => "Product name is required"]);
             exit;
         }
-        
-        $query = "INSERT INTO exports (product_name, category, description, specs, price, moq, company, rating, reviews, exports_to, certifications, verified, image, is_active) 
+
+        $query = "INSERT INTO exports (product_name, category, description, specs, price, moq, company, rating, reviews, exports_to, certifications, verified, image, is_active)
                   VALUES (:product_name, :category, :description, :specs, :price, :moq, :company, :rating, :reviews, :exports_to, :certifications, :verified, :image, :is_active)";
-        
+
         $stmt = $db->prepare($query);
         $stmt->bindParam(':product_name', $input['product_name']);
         $stmt->bindParam(':category', $input['category']);
@@ -63,7 +63,7 @@ try {
         $stmt->bindParam(':verified', $input['verified']);
         $stmt->bindParam(':image', $input['image']);
         $stmt->bindParam(':is_active', $input['is_active']);
-        
+
         if ($stmt->execute()) {
             http_response_code(201);
             echo json_encode(["status" => "success", "message" => "Product created", "id" => $db->lastInsertId()]);
@@ -76,20 +76,20 @@ try {
             echo json_encode(["status" => "error", "message" => "Product ID required"]);
             exit;
         }
-        
+
         $input = json_decode(file_get_contents('php://input'), true);
         $updates = [];
         $params = [':id' => $_GET['id']];
-        
+
         $fields = ['product_name', 'category', 'description', 'specs', 'price', 'moq', 'company', 'rating', 'reviews', 'verified', 'image', 'is_active'];
-        
+
         foreach ($fields as $field) {
             if (isset($input[$field])) {
                 $updates[] = "$field = :$field";
                 $params[":$field"] = $input[$field];
             }
         }
-        
+
         // Handle array fields
         if (isset($input['exports_to'])) {
             $updates[] = "exports_to = :exports_to";
@@ -99,17 +99,17 @@ try {
             $updates[] = "certifications = :certifications";
             $params[':certifications'] = is_array($input['certifications']) ? implode(',', $input['certifications']) : $input['certifications'];
         }
-        
+
         if (empty($updates)) {
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => "No fields to update"]);
             exit;
         }
-        
+
         $query = "UPDATE exports SET " . implode(', ', $updates) . " WHERE id = :id";
         $stmt = $db->prepare($query);
         foreach ($params as $key => $value) $stmt->bindValue($key, $value);
-        
+
         if ($stmt->execute()) {
             echo json_encode(["status" => "success", "message" => "Product updated"]);
         }

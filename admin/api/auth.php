@@ -51,7 +51,7 @@ try {
         $stmt = $db->prepare($query);
         $stmt->bindParam(':username', $input['username']);
         $stmt->execute();
-        
+
         $user = $stmt->fetch();
 
         // Verify user exists

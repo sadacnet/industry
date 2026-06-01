@@ -5,7 +5,7 @@
         <h3>📅 Events Management</h3>
         <button class="btn btn-primary" onclick="openAddModal()">+ Add New Event</button>
     </div>
-    
+
     <table id="eventsTable">
         <thead>
             <tr>
@@ -31,7 +31,7 @@
         <h3 id="modalTitle">Add New Event</h3>
         <form id="eventForm">
             <input type="hidden" id="eventId">
-            
+
             <div class="row">
                 <div class="col-md-8">
                     <div class="form-group">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -64,17 +64,17 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label>Location</label>
                 <input type="text" id="location" class="form-control" placeholder="e.g., HICC Harare">
             </div>
-            
+
             <div class="form-group">
                 <label>Description</label>
                 <textarea id="description" class="form-control" rows="3" placeholder="Describe the event..."></textarea>
             </div>
-            
+
             <div class="form-group">
                 <label>Event Poster / Image</label>
                 <div class="input-group">
@@ -88,7 +88,7 @@
                     <img id="posterPreviewImg" src="" style="max-height:100px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -100,7 +100,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="form-actions">
                 <button type="button" class="btn" onclick="closeModal()">Cancel</button>
                 <button type="submit" class="btn btn-primary">Save Event</button>
@@ -111,7 +111,7 @@
 
 <script>
     loadEvents();
-    
+
     // Live preview when poster path changes
     document.getElementById('poster').addEventListener('input', function() {
         const path = this.value.trim();
@@ -124,32 +124,32 @@
             preview.style.display = 'none';
         }
     });
-    
+
     // Handle image error
     document.getElementById('posterPreviewImg').addEventListener('error', function() {
         this.style.display = 'none';
         document.getElementById('posterPreview').innerHTML += '<small class="text-danger">Image not found at this path</small>';
     });
-    
+
     async function loadEvents() {
         try {
             const response = await fetch('/industry.co.zw/admin/api/events.php');
             const data = await response.json();
-            
+
             if (data.status === 'success') {
                 const tbody = document.querySelector('#eventsTable tbody');
-                
+
                 if (data.data.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="8">No events found</td></tr>';
                     return;
                 }
-                
+
                 tbody.innerHTML = data.data.map(event => `
                     <tr>
                         <td>${event.id}</td>
                         <td>
-                            ${event.poster ? 
-                                `<img src="/industry.co.zw/${event.poster}" style="max-height:40px; max-width:60px; border-radius:4px; cursor:pointer;" onclick="window.open('/industry.co.zw/${event.poster}','_blank')" onerror="this.style.display='none'">` : 
+                            ${event.poster ?
+                                `<img src="/industry.co.zw/${event.poster}" style="max-height:40px; max-width:60px; border-radius:4px; cursor:pointer;" onclick="window.open('/industry.co.zw/${event.poster}','_blank')" onerror="this.style.display='none'">` :
                                 '<span class="badge bg-secondary">No Image</span>'}
                         </td>
                         <td><strong>${event.title}</strong></td>
@@ -172,7 +172,7 @@
             showAlert('Error loading events', 'error');
         }
     }
-    
+
     function openAddModal() {
         document.getElementById('modalTitle').textContent = 'Add New Event';
         document.getElementById('eventForm').reset();
@@ -180,17 +180,17 @@
         document.getElementById('posterPreview').style.display = 'none';
         document.getElementById('eventModal').style.display = 'block';
     }
-    
+
     function closeModal() {
         document.getElementById('eventModal').style.display = 'none';
     }
-    
+
     async function editEvent(id) {
         try {
             const response = await fetch('/industry.co.zw/admin/api/events.php');
             const data = await response.json();
             const event = data.data.find(e => e.id == id);
-            
+
             if (event) {
                 document.getElementById('modalTitle').textContent = 'Edit Event';
                 document.getElementById('eventId').value = event.id;
@@ -202,7 +202,7 @@
                 document.getElementById('description').value = event.description || '';
                 document.getElementById('poster').value = event.poster || '';
                 document.getElementById('is_active').value = event.is_active;
-                
+
                 // Show preview if poster exists
                 if (event.poster) {
                     document.getElementById('posterPreviewImg').src = '/industry.co.zw/' + event.poster;
@@ -210,23 +210,23 @@
                 } else {
                     document.getElementById('posterPreview').style.display = 'none';
                 }
-                
+
                 document.getElementById('eventModal').style.display = 'block';
             }
         } catch (error) {
             showAlert('Error loading event', 'error');
         }
     }
-    
+
     async function deleteEvent(id) {
         if (!confirmDelete()) return;
-        
+
         try {
             const response = await fetch(`/industry.co.zw/admin/api/events.php?id=${id}`, {
                 method: 'DELETE'
             });
             const data = await response.json();
-            
+
             if (data.status === 'success') {
                 showAlert('Event deleted successfully');
                 loadEvents();
@@ -235,10 +235,10 @@
             showAlert('Error deleting event', 'error');
         }
     }
-    
+
     document.getElementById('eventForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
         const eventId = document.getElementById('eventId').value;
         const formData = {
             title: document.getElementById('title').value,
@@ -250,22 +250,22 @@
             poster: document.getElementById('poster').value || null,
             is_active: document.getElementById('is_active').value
         };
-        
-        const url = eventId ? 
-            `/industry.co.zw/admin/api/events.php?id=${eventId}` : 
+
+        const url = eventId ?
+            `/industry.co.zw/admin/api/events.php?id=${eventId}` :
             '/industry.co.zw/admin/api/events.php';
-        
+
         const method = eventId ? 'PUT' : 'POST';
-        
+
         try {
             const response = await fetch(url, {
                 method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
-            
+
             const data = await response.json();
-            
+
             if (data.status === 'success') {
                 showAlert(eventId ? 'Event updated successfully' : 'Event added successfully');
                 closeModal();
@@ -277,7 +277,7 @@
             showAlert('Error saving event', 'error');
         }
     });
-    
+
     window.onclick = function(event) {
         if (event.target == document.getElementById('eventModal')) {
             closeModal();

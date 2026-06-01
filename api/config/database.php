@@ -26,12 +26,12 @@ class Database {
                 $this->username,
                 $this->password
             );
-            
+
             // Set PDO attributes
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             $this->conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-            
+
         } catch(PDOException $exception) {
             // Return error as JSON
             http_response_code(500);

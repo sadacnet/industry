@@ -7,7 +7,7 @@ require_once __DIR__ . '/includes/header.php';
         <h3>📤 Upload Files</h3>
         <a href="dashboard.php" class="btn btn-info">← Back to Dashboard</a>
     </div>
-    
+
     <div id="alertArea"></div>
 
     <!-- Tabs -->
@@ -40,7 +40,7 @@ require_once __DIR__ . '/includes/header.php';
     </ul>
 
     <div class="tab-content">
-        
+
         <!-- Company Logo Upload -->
         <div class="tab-pane fade show active" id="companyUpload">
             <div class="row">
@@ -216,11 +216,11 @@ require_once __DIR__ . '/includes/header.php';
                                 </tbody>
                             </table>
                             <div class="alert alert-info mt-3">
-                                <i class="bi bi-lightbulb"></i> 
+                                <i class="bi bi-lightbulb"></i>
                                 <strong>Tip:</strong> After uploading, copy the file path and paste it into the Tender's Document URL field.
                             </div>
                             <div class="alert alert-warning mt-2">
-                                <i class="bi bi-shield-lock"></i> 
+                                <i class="bi bi-shield-lock"></i>
                                 <strong>Security:</strong> All uploaded documents are scanned for malware before saving.
                             </div>
                         </div>
@@ -406,7 +406,7 @@ require_once __DIR__ . '/includes/header.php';
                     <div class="alert alert-success">
                         <strong><i class="bi bi-check-circle"></i> Uploaded!</strong><br>
                         Path: <code style="background:#e8f5e9;padding:2px 6px;border-radius:3px;">${data.data.file_path}</code>
-                        ${data.data.file_type && ['jpg','jpeg','png','gif','webp'].includes(data.data.file_type.toLowerCase()) ? 
+                        ${data.data.file_type && ['jpg','jpeg','png','gif','webp'].includes(data.data.file_type.toLowerCase()) ?
                             `<br><img src="${data.data.full_url}" style="max-width:100px;margin-top:5px;border-radius:4px;">` : ''}
                         <br><button class="btn btn-sm btn-outline-success mt-1" onclick="copyPath('${data.data.file_path}')"><i class="bi bi-clipboard"></i> Copy Path</button>
                     </div>`;
@@ -480,9 +480,9 @@ require_once __DIR__ . '/includes/header.php';
         formData.append('type', 'document');
         formData.append('title', document.getElementById('docTitle').value);
         const result = await handleUpload(formData, 'documentResult');
-        if (result) { 
-            document.getElementById('documentFile').value = ''; 
-            document.getElementById('docTitle').value = ''; 
+        if (result) {
+            document.getElementById('documentFile').value = '';
+            document.getElementById('docTitle').value = '';
         }
     });
 

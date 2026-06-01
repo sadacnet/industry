@@ -240,7 +240,7 @@ require_once __DIR__ . '/includes/head.php';
         if (status === 'active' && t.is_expired) return false;
         if (status === 'expired' && !t.is_expired) return false;
         if (category && t.category !== category) return false;
-        if (search && !t.title.toLowerCase().includes(search) && 
+        if (search && !t.title.toLowerCase().includes(search) &&
             !t.description.toLowerCase().includes(search) &&
             !t.issuing_organization.toLowerCase().includes(search) &&
             !t.tender_number.toLowerCase().includes(search)) return false;
@@ -288,7 +288,7 @@ require_once __DIR__ . '/includes/head.php';
                   ${t.budget ? '<span class="badge bg-warning text-dark">Budget: $' + parseFloat(t.budget).toLocaleString() + '</span>' : ''}
                 </div>
                 <p style="color:#555;margin-bottom:0;">${t.description ? t.description.substring(0, 250) + (t.description.length > 250 ? '...' : '') : 'No description available'}</p>
-                
+
                 <div class="info-grid">
                   ${t.issuing_organization ? '<div class="info-item"><strong>Issuing Organization</strong><span>' + t.issuing_organization + '</span></div>' : ''}
                   ${t.location ? '<div class="info-item"><strong>Location</strong><span><i class="bi bi-geo-alt"></i> ' + t.location + '</span></div>' : ''}
@@ -318,7 +318,7 @@ require_once __DIR__ . '/includes/head.php';
     function viewDetails(id) {
       const t = allTenders.find(x => x.id == id);
       if (!t) return;
-      
+
       document.getElementById('modalTitle').textContent = t.title;
       document.getElementById('modalBody').innerHTML = `
         <div class="row">
@@ -348,7 +348,7 @@ require_once __DIR__ . '/includes/head.php';
             </div>
           </div>
         </div>`;
-      
+
       new bootstrap.Modal(document.getElementById('tenderDetailModal')).show();
     }
 

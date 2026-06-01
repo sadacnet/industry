@@ -57,7 +57,7 @@ try {
         }
     }
     $stmt->execute();
-    
+
     $videos = $stmt->fetchAll();
 
     // Get categories

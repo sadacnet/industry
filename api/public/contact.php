@@ -83,9 +83,9 @@ try {
     $db = $database->getConnection();
 
     // Insert enquiry
-    $query = "INSERT INTO contact_enquiries (name, email, phone, subject, message, recaptcha_score) 
+    $query = "INSERT INTO contact_enquiries (name, email, phone, subject, message, recaptcha_score)
               VALUES (:name, :email, :phone, :subject, :message, :recaptcha_score)";
-    
+
     $stmt = $db->prepare($query);
     $stmt->bindParam(':name', $name);
     $stmt->bindParam(':email', $email);
@@ -93,7 +93,7 @@ try {
     $stmt->bindParam(':subject', $subject);
     $stmt->bindParam(':message', $message);
     $stmt->bindParam(':recaptcha_score', $recaptchaScore);
-    
+
     if ($stmt->execute()) {
         http_response_code(201);
         echo json_encode([

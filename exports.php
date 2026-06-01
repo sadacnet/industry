@@ -385,7 +385,7 @@ require_once __DIR__ . '/includes/head.php';
       const filtered = getFilteredProducts();
       const sorted = sortProducts(filtered);
       const paginated = paginate(sorted);
-      
+
       document.getElementById('resultCount').textContent = filtered.length;
       renderProducts(paginated);
       renderPagination(filtered.length);
@@ -393,7 +393,7 @@ require_once __DIR__ . '/includes/head.php';
 
     function renderProducts(products) {
       const container = document.getElementById('productsContainer');
-      
+
       if (products.length === 0) {
         container.innerHTML = `<div class="col-12 text-center py-5"><i class="bi bi-search" style="font-size:48px;color:#ccc;"></i><h4 class="mt-3">No products found</h4><button class="btn btn-success mt-2" onclick="resetFilters()">Reset Filters</button></div>`;
         return;
@@ -448,7 +448,7 @@ require_once __DIR__ . '/includes/head.php';
 
     function changePage(page) { currentPage = page; displayProducts(); window.scrollTo({ top: 400, behavior: 'smooth' }); }
     function applyFilters() { currentPage = 1; displayProducts(); }
-    
+
     function resetFilters() {
       document.getElementById('categoryFilter').value = '';
       document.getElementById('destinationFilter').value = '';

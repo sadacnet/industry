@@ -28,26 +28,26 @@ try {
     // GET - List events
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $query = "SELECT * FROM events ORDER BY event_date DESC";
-        
+
         // Pagination
         $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
         $limit = isset($_GET['limit']) ? min(50, max(1, intval($_GET['limit']))) : 10;
         $offset = ($page - 1) * $limit;
-        
+
         $countQuery = "SELECT COUNT(*) as total FROM events";
         $countStmt = $db->prepare($countQuery);
         $countStmt->execute();
         $totalCount = $countStmt->fetch()['total'];
-        
+
         $query .= " LIMIT :limit OFFSET :offset";
-        
+
         $stmt = $db->prepare($query);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
-        
+
         $events = $stmt->fetchAll();
-        
+
         http_response_code(200);
         echo json_encode([
             "status" => "success",
@@ -64,16 +64,16 @@ try {
     // POST - Create event
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $input = json_decode(file_get_contents('php://input'), true);
-        
+
         if (!isset($input['title']) || !isset($input['event_date'])) {
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => "Title and event date are required"]);
             exit;
         }
-        
-        $query = "INSERT INTO events (title, organizer, event_date, end_date, location, description, poster) 
+
+        $query = "INSERT INTO events (title, organizer, event_date, end_date, location, description, poster)
                   VALUES (:title, :organizer, :event_date, :end_date, :location, :description, :poster)";
-        
+
         $stmt = $db->prepare($query);
         $stmt->bindParam(':title', $input['title']);
         $stmt->bindParam(':organizer', $input['organizer']);
@@ -82,7 +82,7 @@ try {
         $stmt->bindParam(':location', $input['location']);
         $stmt->bindParam(':description', $input['description']);
         $stmt->bindParam(':poster', $input['poster']);
-        
+
         if ($stmt->execute()) {
             http_response_code(201);
             echo json_encode([
@@ -100,28 +100,28 @@ try {
             echo json_encode(["status" => "error", "message" => "Event ID is required"]);
             exit;
         }
-        
+
         $input = json_decode(file_get_contents('php://input'), true);
-        
+
         $updates = [];
         $params = [':id' => $_GET['id']];
-        
+
         $allowedFields = ['title', 'organizer', 'event_date', 'end_date', 'location', 'description', 'poster', 'is_active'];
-        
+
         foreach ($allowedFields as $field) {
             if (isset($input[$field])) {
                 $updates[] = "$field = :$field";
                 $params[":$field"] = $input[$field];
             }
         }
-        
+
         $query = "UPDATE events SET " . implode(', ', $updates) . " WHERE id = :id";
-        
+
         $stmt = $db->prepare($query);
         foreach ($params as $key => $value) {
             $stmt->bindValue($key, $value);
         }
-        
+
         if ($stmt->execute()) {
             http_response_code(200);
             echo json_encode(["status" => "success", "message" => "Event updated successfully"]);
@@ -135,11 +135,11 @@ try {
             echo json_encode(["status" => "error", "message" => "Event ID is required"]);
             exit;
         }
-        
+
         $query = "DELETE FROM events WHERE id = :id";
         $stmt = $db->prepare($query);
         $stmt->bindParam(':id', $_GET['id'], PDO::PARAM_INT);
-        
+
         if ($stmt->execute()) {
             http_response_code(200);
             echo json_encode(["status" => "success", "message" => "Event deleted successfully"]);

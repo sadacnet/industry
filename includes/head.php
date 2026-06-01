@@ -26,3 +26,6 @@
 
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- Mock API for development -->
+  <script src="assets/js/mock-data.js"></script>

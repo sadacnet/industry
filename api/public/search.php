@@ -27,12 +27,12 @@ try {
 
     $searchTerm = "%" . trim($_GET['q']) . "%";
     $type = isset($_GET['type']) ? $_GET['type'] : 'all';
-    
+
     $results = [];
 
     // Search Companies
     if ($type === 'all' || $type === 'companies') {
-        $query = "SELECT 
+        $query = "SELECT
                     c.id, c.name, c.description, c.logo, c.stakeholder,
                     i.name as industry_name, i.slug as industry_slug,
                     p.name as province_name, p.slug as province_slug,
@@ -40,13 +40,13 @@ try {
                   FROM companies c
                   JOIN industries i ON c.industry_id = i.id
                   JOIN provinces p ON c.province_id = p.id
-                  WHERE c.is_active = 1 
-                  AND (c.name LIKE :search1 
-                       OR c.description LIKE :search2 
+                  WHERE c.is_active = 1
+                  AND (c.name LIKE :search1
+                       OR c.description LIKE :search2
                        OR i.name LIKE :search3)
                   ORDER BY c.name ASC
                   LIMIT 5";
-        
+
         $stmt = $db->prepare($query);
         $stmt->bindValue(':search1', $searchTerm);
         $stmt->bindValue(':search2', $searchTerm);
@@ -57,17 +57,17 @@ try {
 
     // Search Events
     if ($type === 'all' || $type === 'events') {
-        $query = "SELECT 
+        $query = "SELECT
                     id, title, description, event_date, location, organizer,
                     'event' as result_type
-                  FROM events 
-                  WHERE is_active = 1 
-                  AND (title LIKE :search1 
-                       OR description LIKE :search2 
+                  FROM events
+                  WHERE is_active = 1
+                  AND (title LIKE :search1
+                       OR description LIKE :search2
                        OR location LIKE :search3)
                   ORDER BY event_date ASC
                   LIMIT 5";
-        
+
         $stmt = $db->prepare($query);
         $stmt->bindValue(':search1', $searchTerm);
         $stmt->bindValue(':search2', $searchTerm);
@@ -78,16 +78,16 @@ try {
 
     // Search Tenders
     if ($type === 'all' || $type === 'tenders') {
-        $query = "SELECT 
+        $query = "SELECT
                     id, title, description, closing_date,
                     'tender' as result_type
-                  FROM tenders 
-                  WHERE is_active = 1 
-                  AND (title LIKE :search1 
+                  FROM tenders
+                  WHERE is_active = 1
+                  AND (title LIKE :search1
                        OR description LIKE :search2)
                   ORDER BY closing_date ASC
                   LIMIT 5";
-        
+
         $stmt = $db->prepare($query);
         $stmt->bindValue(':search1', $searchTerm);
         $stmt->bindValue(':search2', $searchTerm);
@@ -97,17 +97,17 @@ try {
 
     // Search Exports
     if ($type === 'all' || $type === 'exports') {
-        $query = "SELECT 
+        $query = "SELECT
                     id, product_name, description, category, image,
                     'export' as result_type
-                  FROM exports 
-                  WHERE is_active = 1 
-                  AND (product_name LIKE :search1 
-                       OR description LIKE :search2 
+                  FROM exports
+                  WHERE is_active = 1
+                  AND (product_name LIKE :search1
+                       OR description LIKE :search2
                        OR category LIKE :search3)
                   ORDER BY product_name ASC
                   LIMIT 5";
-        
+
         $stmt = $db->prepare($query);
         $stmt->bindValue(':search1', $searchTerm);
         $stmt->bindValue(':search2', $searchTerm);

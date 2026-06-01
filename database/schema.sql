@@ -1,6 +1,6 @@
 -- This creates our database and tells MySQL to use it
 CREATE DATABASE IF NOT EXISTS industry_co_zw
-CHARACTER SET utf8mb4 
+CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
 USE industry_co_zw;

@@ -87,11 +87,11 @@ requireAdminLogin();
     <!-- Members Management -->
     <div class="section">
         <h2>🏢 Members Management</h2>
-        
+
         <h3>Get All Members</h3>
         <button onclick="testEndpoint('/industry.co.zw/admin/api/members.php', 'allMembersResult')">Load All Members</button>
         <pre id="allMembersResult">Click button to load...</pre>
-        
+
         <h3>Add New Member</h3>
         <div class="form-group">
             <input type="text" id="memberName" placeholder="Company Name" required>
@@ -115,7 +115,7 @@ requireAdminLogin();
             <button onclick="addMember()">Add Member</button>
         </div>
         <pre id="addMemberResult">Result will appear here...</pre>
-        
+
         <h3>Delete Last Member</h3>
         <input type="number" id="deleteMemberId" placeholder="Member ID to delete">
         <button class="danger" onclick="deleteMember()">Delete Member</button>
@@ -125,10 +125,10 @@ requireAdminLogin();
     <!-- Events Management -->
     <div class="section">
         <h2>📅 Events Management</h2>
-        
+
         <button onclick="testEndpoint('/industry.co.zw/admin/api/events.php', 'eventsResult')">Load All Events</button>
         <pre id="eventsResult">Click button to load...</pre>
-        
+
         <h3>Add New Event</h3>
         <div class="form-group">
             <input type="text" id="eventTitle" placeholder="Event Title">
@@ -146,10 +146,10 @@ requireAdminLogin();
     <!-- Tenders Management -->
     <div class="section">
         <h2>📄 Tenders Management</h2>
-        
+
         <button onclick="testEndpoint('/industry.co.zw/admin/api/tenders.php', 'tendersResult')">Load All Tenders</button>
         <pre id="tendersResult">Click button to load...</pre>
-        
+
         <h3>Add New Tender</h3>
         <div class="form-group">
             <input type="text" id="tenderTitle" placeholder="Tender Title">
@@ -165,7 +165,7 @@ requireAdminLogin();
         async function testEndpoint(url, resultId) {
             const resultDiv = document.getElementById(resultId);
             resultDiv.innerHTML = 'Loading...';
-            
+
             try {
                 const response = await fetch(url);
                 const data = await response.json();
@@ -178,7 +178,7 @@ requireAdminLogin();
         // Add Member
         async function addMember() {
             const resultDiv = document.getElementById('addMemberResult');
-            
+
             const data = {
                 name: document.getElementById('memberName').value,
                 industry_id: document.getElementById('memberIndustry').value,
@@ -186,14 +186,14 @@ requireAdminLogin();
                 phone: document.getElementById('memberPhone').value,
                 email: document.getElementById('memberEmail').value
             };
-            
+
             if (!data.name || !data.industry_id || !data.province_id) {
                 resultDiv.innerHTML = '<span class="error">Please fill in all required fields</span>';
                 return;
             }
-            
+
             resultDiv.innerHTML = 'Adding member...';
-            
+
             try {
                 const response = await fetch('/industry.co.zw/admin/api/members.php', {
                     method: 'POST',
@@ -202,7 +202,7 @@ requireAdminLogin();
                 });
                 const result = await response.json();
                 resultDiv.innerHTML = JSON.stringify(result, null, 2);
-                
+
                 if (result.status === 'success') {
                     document.getElementById('memberName').value = '';
                     document.getElementById('memberPhone').value = '';
@@ -217,14 +217,14 @@ requireAdminLogin();
         async function deleteMember() {
             const resultDiv = document.getElementById('deleteMemberResult');
             const memberId = document.getElementById('deleteMemberId').value;
-            
+
             if (!memberId) {
                 resultDiv.innerHTML = '<span class="error">Please enter a Member ID</span>';
                 return;
             }
-            
+
             resultDiv.innerHTML = 'Deleting member...';
-            
+
             try {
                 const response = await fetch(`/industry.co.zw/admin/api/members.php?id=${memberId}`, {
                     method: 'DELETE'
@@ -239,21 +239,21 @@ requireAdminLogin();
         // Add Event
         async function addEvent() {
             const resultDiv = document.getElementById('addEventResult');
-            
+
             const data = {
                 title: document.getElementById('eventTitle').value,
                 organizer: document.getElementById('eventOrganizer').value,
                 event_date: document.getElementById('eventDate').value,
                 location: document.getElementById('eventLocation').value
             };
-            
+
             if (!data.title || !data.event_date) {
                 resultDiv.innerHTML = '<span class="error">Title and date are required</span>';
                 return;
             }
-            
+
             resultDiv.innerHTML = 'Adding event...';
-            
+
             try {
                 const response = await fetch('/industry.co.zw/admin/api/events.php', {
                     method: 'POST',
@@ -270,20 +270,20 @@ requireAdminLogin();
         // Add Tender
         async function addTender() {
             const resultDiv = document.getElementById('addTenderResult');
-            
+
             const data = {
                 title: document.getElementById('tenderTitle').value,
                 closing_date: document.getElementById('closingDate').value,
                 description: document.getElementById('tenderDescription').value
             };
-            
+
             if (!data.title || !data.closing_date) {
                 resultDiv.innerHTML = '<span class="error">Title and closing date are required</span>';
                 return;
             }
-            
+
             resultDiv.innerHTML = 'Adding tender...';
-            
+
             try {
                 const response = await fetch('/industry.co.zw/admin/api/tenders.php', {
                     method: 'POST',
