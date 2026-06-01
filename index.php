@@ -65,7 +65,6 @@ require_once __DIR__ . '/includes/head.php';
     margin: 20px;
     transition: 0.3s;
   }
-  .featured-logos img:hover { filter: grayscale(0%); opacity: 1; }
 </style>
 </head>
 
@@ -95,20 +94,19 @@ require_once __DIR__ . '/includes/head.php';
           <h2>Featured Companies</h2>
         </div>
         <div class="row g-4" id="industries-list">
-          <!-- Loaded via API -->
+          <!-- Top 6 sectors loaded via API -->
         </div>
       </div>
     </section>
 
-    <!-- Featured Sliders -->
+    <!-- Featured Logo Slider -->
     <section class="py-5 bg-light">
       <div class="container text-center">
         <h2 class="mb-5" style="color: #28a745; font-weight:700;">Featured Companies</h2>
-        <div class="featured-logos d-flex flex-wrap justify-content-center align-items-center">
-           <img src="assets/img/cloned/amc-n.png" alt="AMC">
-           <img src="assets/img/cloned/kwblasting-logo.png" alt="KW Blasting">
-           <img src="assets/img/cloned/speartec-logo.png" alt="Speartec">
-           <!-- More can be added -->
+        <div class="logo-slider">
+          <div class="logo-track" id="featured-slider">
+             <!-- Populated from API -->
+          </div>
         </div>
       </div>
     </section>
@@ -117,12 +115,6 @@ require_once __DIR__ . '/includes/head.php';
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
-  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>

@@ -97,7 +97,9 @@ require_once __DIR__ . '/includes/head.php';
                         'mining': 'bi bi-hammer',
                         'technology-ict': 'bi bi-cpu',
                         'tourism-hospitality': 'bi bi-piazza',
-                        'transport-logistics': 'bi bi-truck'
+                        'transport-logistics': 'bi bi-truck',
+                        'abrasives': 'bi bi-gem',
+                        'air-conditioning': 'bi bi-wind'
                     };
                     grid.innerHTML = data.data.map(ind => `
                         <div class="col-lg-3 col-md-4 col-6">

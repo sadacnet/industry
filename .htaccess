@@ -6,7 +6,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^\.]+)$ $1.php [NC,L]
 
 # Exact matches for cloned site
-RewriteRule ^find-suppliers/?$ industries.php [L]
+RewriteRule ^find-suppliers/?$ find-suppliers.php [L]
 RewriteRule ^membership-directory/?$ industry.php [L]
 RewriteRule ^add-listing/?$ contact.php [L]
 RewriteRule ^browse-supplier-category/?$ industries.php [L]
