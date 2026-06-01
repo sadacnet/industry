@@ -326,7 +326,7 @@ require_once __DIR__ . '/includes/head.php';
 
   <!-- Contact Form AJAX -->
   <script>
-    const API_BASE = '/industry.co.zw/api/public';
+    const API_BASE = 'api/public';
 
     document.getElementById('contactForm').addEventListener('submit', async function(e) {
       e.preventDefault();

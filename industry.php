@@ -1,6 +1,6 @@
 <?php
-$pageTitle = "CZI Member Directory - industry.co.zw";
-$pageDescription = "Browse CZI member companies across various industries and sectors";
+$pageTitle = "Industry Directory - industry.co.zw";
+$pageDescription = "Browse member companies across various industries and sectors in Zimbabwe";
 require_once __DIR__ . '/includes/head.php';
 ?>
 </head>
@@ -11,10 +11,15 @@ require_once __DIR__ . '/includes/head.php';
 
   <main class="main" style="background: #f5f5f5; padding: 40px 0;">
 
+    <div class="container mb-4">
+      <h2 style="color: #28a745; font-weight: 700;">Industry Directory</h2>
+      <p class="text-muted">Explore categories and find suppliers</p>
+    </div>
+
     <!-- Member Directory Section -->
     <section id="member-directory" class="member-directory section">
       <div class="container">
-        
+
         <div class="row" id="directoryContent">
           <div class="col-12 text-center py-5">
             <div class="spinner-border text-success" style="width: 3rem; height: 3rem;"></div>
@@ -29,235 +34,179 @@ require_once __DIR__ . '/includes/head.php';
 
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/js/main.js"></script>
+
   <style>
     .directory-column {
       margin-bottom: 30px;
     }
-    
+
     .category-section {
       margin-bottom: 35px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
-    
+
     .category-title {
       display: flex;
       align-items: center;
-      font-size: 1.15rem;
+      font-size: 1.25rem;
       font-weight: 700;
       color: #28a745;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 10px;
     }
-    
+
     .category-icon {
-      width: 20px;
-      height: 20px;
       margin-right: 10px;
-      color: #1e5a8e;
     }
-    
-    .category-count {
-      color: #28a745;
-      margin-left: 5px;
-    }
-    
+
     .directory-list {
       list-style: none;
       padding: 0;
       margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
     }
-    
+
     .directory-item {
       display: flex;
       align-items: center;
-      padding: 6px 0;
-      color: #28a745;
+      padding: 8px 12px;
+      color: #444;
       text-decoration: none;
       font-size: 0.95rem;
       transition: all 0.2s ease;
+      background: #f9f9f9;
+      border-radius: 4px;
     }
-    
+
     .directory-item:hover {
-      color: #1e7e34;
-      padding-left: 5px;
-    }
-    
-    .item-icon {
-      width: 24px;
-      height: 24px;
-      background: #a8d5a0;
-      border-radius: 3px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 10px;
       color: #fff;
-      font-size: 0.75rem;
+      background: #28a745;
+      padding-left: 15px;
     }
-    
-    .item-icon.dark {
-      background: #5a9e52;
+
+    .item-icon {
+      margin-right: 10px;
+      font-size: 1.1rem;
     }
-    
+
     .item-text {
       flex: 1;
     }
-    
+
     .item-count {
-      color: #28a745;
-      font-weight: 500;
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-left: 5px;
     }
   </style>
 
   <script>
-    const API = '/industry.co.zw/api/public';
-    
-    // Directory data matching the screenshot exactly
-    const directoryData = [
-      {
-        name: 'Construction',
-        count: 15,
-        icon: 'bi bi-globe',
-        items: [
-          { name: 'Abrasives', icon: 'bi bi-box' },
-          { name: 'Air Conditioning', icon: 'bi bi-snow' },
-          { name: 'Brick Manufacturing', icon: 'bi bi-building' },
-          { name: 'Building', icon: 'bi bi-building-check' },
-          { name: 'Cements', icon: 'bi bi-droplet' },
-          { name: 'Concrete Products', icon: 'bi bi-square' },
-          { name: 'Landscaping', icon: 'bi bi-tree' },
-          { name: 'Painting', count: 2, icon: 'bi bi-palette' },
-          { name: 'Real Estate', icon: 'bi bi-house' },
-          { name: 'Shopfitters', count: 8, icon: 'bi bi-shop' }
-        ]
-      },
-      {
-        name: 'CZI Member Directory',
-        count: 17,
-        icon: 'bi bi-globe',
-        items: [
-          { name: 'Accommodation', icon: 'bi bi-hotel' },
-          { name: 'Arts and Culture', icon: 'bi bi-palette' },
-          { name: 'Associations', icon: 'bi bi-people' },
-          { name: 'Consulting', icon: 'bi bi-briefcase' },
-          { name: 'CZI', icon: 'bi bi-building' },
-          { name: 'Education', count: 1, icon: 'bi bi-mortarboard' },
-          { name: 'Fire Places', icon: 'bi bi-fire' },
-          { name: 'Fuel Technology', count: 1, icon: 'bi bi-fuel-pump' },
-          { name: 'Handling Services', icon: 'bi bi-truck' },
-          { name: 'homeware', count: 2, icon: 'bi bi-house-heart' },
-          { name: 'ICT', count: 4, icon: 'bi bi-pc' },
-          { name: 'Printing', count: 3, icon: 'bi bi-printer' },
-          { name: 'Security', count: 4, icon: 'bi bi-shield-check' },
-          { name: 'SPORT', count: 1, icon: 'bi bi-trophy' },
-          { name: 'Supermarket', count: 1, icon: 'bi bi-cart' },
-          { name: 'Wedding and Accessories', icon: 'bi bi-heart' }
-        ]
-      },
-      {
-        name: 'Industry',
-        count: 54,
-        icon: 'bi bi-globe',
-        items: [
-          { name: 'Agriculture', count: 3, icon: 'bi bi-flower1' },
-          { name: 'Airlines', icon: 'bi bi-airplane' },
-          { name: 'Aluminium', count: 3, icon: 'bi bi-square' },
-          { name: 'Auctions', count: 1, icon: 'bi bi-hand-thumbs-up' },
-          { name: 'Auto Mobile', count: 27, icon: 'bi bi-car-front' },
-          { name: 'Car Hiring', icon: 'bi bi-car-front-fill' },
-          { name: 'Entertainment', count: 1, icon: 'bi bi-film' },
-          { name: 'Events Management', icon: 'bi bi-calendar-event' },
-          { name: 'Finance', count: 1, icon: 'bi bi-cash-stack' },
-          { name: 'Food', count: 5, icon: 'bi bi-cup-hot' },
-          { name: 'Health and Hygien', count: 6, icon: 'bi bi-heart-pulse' },
-          { name: 'Laundry', count: 2, icon: 'bi bi-droplet' },
-          { name: 'Media', count: 1, icon: 'bi bi-camera-video' },
-          { name: 'Shipping, Forwarding and Custom Clearing', count: 1, icon: 'bi bi-ship' },
-          { name: 'Tenders', count: 1, icon: 'bi bi-clipboard-check' },
-          { name: 'Transport', count: 2, icon: 'bi bi-truck' },
-          { name: 'Travel and Tourism', icon: 'bi bi-suitcase' }
-        ]
-      },
-      {
-        name: 'Manufacturing',
-        count: 32,
-        icon: 'bi bi-globe',
-        items: [
-          { name: 'Beauty and Cosmetics', icon: 'bi bi-handbag', dark: true },
-          { name: 'Chemicals', count: 1, icon: 'bi bi-flask', dark: true },
-          { name: 'Electrical', count: 3, icon: 'bi bi-lightning', dark: true },
-          { name: 'Engineering', count: 12, icon: 'bi bi-tools', dark: true },
-          { name: 'Foams and Beds', icon: 'bi bi-bed', dark: true },
-          { name: 'Hardware', count: 6, icon: 'bi bi-hammer', dark: true },
-          { name: 'Leather Products', icon: 'bi bi-bag', dark: true },
-          { name: 'Metal Works', icon: 'bi bi-wrench', dark: true },
-          { name: 'Packaging', icon: 'bi bi-box-seam', dark: true },
-          { name: 'Phamaceuticals', count: 4, icon: 'bi bi-capsule', dark: true },
-          { name: 'Plastics', count: 4, icon: 'bi bi-file-earmark', dark: true },
-          { name: 'Stationery', count: 4, icon: 'bi bi-journal', dark: true }
-        ]
-      },
-      {
-        name: 'Msasa',
-        count: 13,
-        icon: 'bi bi-globe',
-        items: [
-          { name: 'Citroen', count: 6, icon: 'bi bi-car-front' },
-          { name: 'Streets', icon: 'bi bi-signpost' },
-          { name: 'Whites Way', count: 7, icon: 'bi bi-signpost-split' }
-        ]
-      }
-    ];
+    const API = 'api/public';
 
-    function renderDirectory() {
+    async function fetchAndRenderDirectory() {
+      try {
+        const response = await fetch(`${API}/industries.php`);
+        const data = await response.json();
+
+        if (data.status === 'success') {
+          renderDirectory(data.data);
+        } else {
+          throw new Exception(data.message);
+        }
+      } catch (error) {
+        document.getElementById('directoryContent').innerHTML = `
+          <div class="col-12 text-center py-5">
+            <div class="alert alert-danger">Failed to load directory. Please try again later.</div>
+          </div>
+        `;
+      }
+    }
+
+    function renderDirectory(industries) {
       const container = document.getElementById('directoryContent');
-      
-      let html = '<div class="row">';
-      
-      // Create 3 columns
-      const col1 = [directoryData[0], directoryData[1]]; // Construction, CZI
-      const col2 = [directoryData[2]]; // Industry
-      const col3 = [directoryData[3], directoryData[4]]; // Manufacturing, Msasa
-      
-      const columns = [col1, col2, col3];
-      
-      columns.forEach((col, colIndex) => {
-        html += '<div class="col-lg-4 col-md-6 directory-column">';
-        
-        col.forEach(category => {
-          html += `
-            <div class="category-section">
-              <div class="category-title">
-                <i class="${category.icon} category-icon"></i>
-                <span>${category.name}</span>
-                <span class="category-count">(${category.count})</span>
-              </div>
-              <ul class="directory-list">
-                ${category.items.map(item => `
-                  <li>
-                    <a href="companies.php?category=${encodeURIComponent(item.name)}" class="directory-item">
-                      <div class="item-icon ${item.dark ? 'dark' : ''}">
-                        <i class="${item.icon}"></i>
-                      </div>
-                      <span class="item-text">${item.name}</span>
-                      ${item.count ? `<span class="item-count">(${item.count})</span>` : ''}
-                    </a>
-                  </li>
-                `).join('')}
-              </ul>
+
+      const icons = {
+          'auto': 'bi bi-car-front',
+          'agriculture': 'bi bi-flower1',
+          'banking-finance': 'bi bi-bank',
+          'construction': 'bi bi-building-gear',
+          'manufacturing': 'bi bi-factory',
+          'mining': 'bi bi-hammer',
+          'technology-ict': 'bi bi-cpu',
+          'tourism-hospitality': 'bi bi-piazza',
+          'transport-logistics': 'bi bi-truck',
+          'chemicals': 'bi bi-flask',
+          'consulting': 'bi bi-briefcase',
+          'electrical': 'bi bi-lightning',
+          'metal-works': 'bi bi-wrench',
+          'plastics': 'bi bi-file-earmark',
+          'real-estate': 'bi bi-house',
+          'pharmaceuticals': 'bi bi-capsule',
+          'beauty-and-cosmetics': 'bi bi-handbag',
+          'events-management': 'bi bi-calendar-event',
+          'wedding-and-accessories': 'bi bi-heart',
+          'fuel-technology': 'bi bi-fuel-pump',
+          'media': 'bi bi-camera-video',
+          'cements': 'bi bi-droplet',
+          'air-conditioning': 'bi bi-snow',
+          'brick-manufacturing': 'bi bi-building',
+          'concrete-products': 'bi bi-square',
+          'car-hiring': 'bi bi-car-front-fill',
+          'fireplaces': 'bi bi-fire',
+          'security': 'bi bi-shield-check',
+          'food-and-nutrition': 'bi bi-cup-hot',
+          'stationery': 'bi bi-journal',
+          'health-and-hygiene': 'bi bi-heart-pulse',
+          'hardware': 'bi bi-hammer',
+          'printing': 'bi bi-printer',
+          'fashion': 'bi bi-handbag'
+      };
+
+      let html = `
+        <div class="col-12">
+          <div class="category-section">
+            <div class="category-title">
+              <i class="bi bi-grid category-icon"></i>
+              <span>All Industries</span>
+              <span class="ms-2 badge bg-success">${industries.length}</span>
             </div>
-          `;
-        });
-        
-        html += '</div>';
-      });
-      
-      html += '</div>';
+            <ul class="directory-list">
+              ${industries.map(ind => `
+                <li>
+                  <a href="companies.php?industry=${ind.slug}" class="directory-item">
+                    <div class="item-icon">
+                      <i class="${icons[ind.slug] || 'bi bi-box-seam'}"></i>
+                    </div>
+                    <span class="item-text">${ind.name}</span>
+                    <span class="item-count">(${ind.company_count || 0})</span>
+                  </a>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        </div>
+      `;
+
       container.innerHTML = html;
     }
 
     // Load directory on page load
     document.addEventListener('DOMContentLoaded', function() {
-      renderDirectory();
+      fetchAndRenderDirectory();
     });
   </script>
 
