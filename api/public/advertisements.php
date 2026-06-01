@@ -27,7 +27,7 @@ try {
     }
 
     $stakeholder = strtoupper($_GET['stakeholder']);
-    
+
     // Validate stakeholder value
     if (!in_array($stakeholder, ['CZI', 'CIFOZ'])) {
         http_response_code(400);
@@ -61,7 +61,7 @@ try {
         $stmt->bindValue($key, $value);
     }
     $stmt->execute();
-    
+
     $advertisements = $stmt->fetchAll();
 
     // Update view count for these ads

@@ -19,7 +19,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
@@ -28,7 +28,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
             align-items: center;
             justify-content: center;
         }
-        
+
         .login-container {
             background: white;
             padding: 40px;
@@ -37,7 +37,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
             width: 100%;
             max-width: 400px;
         }
-        
+
         .logo {
             text-align: center;
             margin-bottom: 30px;
@@ -45,18 +45,18 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
             color: #1b5e20;
             font-weight: bold;
         }
-        
+
         .form-group {
             margin-bottom: 20px;
         }
-        
+
         label {
             display: block;
             margin-bottom: 5px;
             color: #333;
             font-weight: bold;
         }
-        
+
         input {
             width: 100%;
             padding: 12px;
@@ -65,12 +65,12 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
             font-size: 16px;
             transition: border-color 0.3s;
         }
-        
+
         input:focus {
             outline: none;
             border-color: #2e7d32;
         }
-        
+
         button {
             width: 100%;
             padding: 12px;
@@ -82,11 +82,11 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
             cursor: pointer;
             transition: background 0.3s;
         }
-        
+
         button:hover {
             background: #1b5e20;
         }
-        
+
         .error {
             background: #ffcdd2;
             color: #c62828;
@@ -95,7 +95,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
             margin-bottom: 20px;
             display: none;
         }
-        
+
         .error.show {
             display: block;
         }
@@ -107,20 +107,20 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
             🏭 industry.co.zw<br>
             <small style="font-size: 14px; color: #666;">Admin Panel</small>
         </div>
-        
+
         <div id="error" class="error"></div>
-        
+
         <form id="loginForm">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            
+
             <button type="submit">Login</button>
         </form>
     </div>
@@ -128,11 +128,11 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
     <script>
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('error');
-            
+
             try {
                 const response = await fetch('/industry.co.zw/admin/api/auth.php', {
                     method: 'POST',
@@ -141,9 +141,9 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
                     },
                     body: JSON.stringify({ username, password })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (data.status === 'success') {
                     // Login successful - redirect to dashboard
                     window.location.href = '/industry.co.zw/admin/dashboard.php';

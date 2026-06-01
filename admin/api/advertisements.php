@@ -27,10 +27,10 @@ try {
     // POST - Create ad
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $input = json_decode(file_get_contents('php://input'), true);
-        
-        $query = "INSERT INTO advertisements (stakeholder, type, title, file_path, file_type, link_url, display_order, is_active) 
+
+        $query = "INSERT INTO advertisements (stakeholder, type, title, file_path, file_type, link_url, display_order, is_active)
                   VALUES (:stakeholder, :type, :title, :file_path, :file_type, :link_url, :display_order, :is_active)";
-        
+
         $stmt = $db->prepare($query);
         $stmt->bindParam(':stakeholder', $input['stakeholder']);
         $stmt->bindParam(':type', $input['type']);
@@ -40,7 +40,7 @@ try {
         $stmt->bindParam(':link_url', $input['link_url']);
         $stmt->bindParam(':display_order', $input['display_order']);
         $stmt->bindParam(':is_active', $input['is_active']);
-        
+
         if ($stmt->execute()) {
             http_response_code(201);
             echo json_encode(["status" => "success", "message" => "Ad created", "id" => $db->lastInsertId()]);
@@ -52,7 +52,7 @@ try {
         $input = json_decode(file_get_contents('php://input'), true);
         $updates = [];
         $params = [':id' => $_GET['id']];
-        
+
         $fields = ['stakeholder', 'type', 'title', 'file_path', 'file_type', 'link_url', 'display_order', 'is_active'];
         foreach ($fields as $field) {
             if (isset($input[$field])) {
@@ -60,9 +60,9 @@ try {
                 $params[":$field"] = $input[$field];
             }
         }
-        
+
         if (empty($updates)) { http_response_code(400); echo json_encode(["status" => "error", "message" => "No fields"]); exit; }
-        
+
         $query = "UPDATE advertisements SET " . implode(', ', $updates) . " WHERE id = :id";
         $stmt = $db->prepare($query);
         foreach ($params as $key => $value) $stmt->bindValue($key, $value);

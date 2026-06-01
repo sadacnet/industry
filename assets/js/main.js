@@ -65,9 +65,17 @@
    */
   const preloader = document.querySelector('#preloader');
   if (preloader) {
-    window.addEventListener('load', () => {
+    const removePreloader = () => {
       preloader.remove();
-    });
+    };
+
+    if (document.readyState === 'complete') {
+      removePreloader();
+    } else {
+      window.addEventListener('load', removePreloader);
+      // Fallback: remove after 3 seconds anyway to prevent "infinite loading"
+      setTimeout(removePreloader, 3000);
+    }
   }
 
   /**

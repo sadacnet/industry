@@ -39,13 +39,13 @@
       position: relative;
       border: 1px solid #e0e0e0;
     }
-    
+
     .product-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 25px rgba(0,0,0,0.12);
       border-color: #006400;
     }
-    
+
     .product-card .verified-badge {
       position: absolute;
       top: 10px;
@@ -57,11 +57,11 @@
       font-size: 11px;
       font-weight: 600;
     }
-    
+
     .product-card .verified-badge i {
       font-size: 10px;
     }
-    
+
     .product-card .product-img {
       text-align: center;
       margin-bottom: 15px;
@@ -70,13 +70,13 @@
       align-items: center;
       justify-content: center;
     }
-    
+
     .product-card .product-img img {
       max-height: 100%;
       max-width: 100%;
       object-fit: contain;
     }
-    
+
     .product-card .product-name {
       font-size: 15px;
       font-weight: 600;
@@ -84,56 +84,56 @@
       margin-bottom: 5px;
       line-height: 1.3;
     }
-    
+
     .product-card .product-specs {
       font-size: 12px;
       color: #666;
       margin-bottom: 8px;
     }
-    
+
     .product-card .price {
       font-size: 20px;
       font-weight: 700;
       color: #006400;
       margin-bottom: 5px;
     }
-    
+
     .product-card .price small {
       font-size: 12px;
       color: #888;
     }
-    
+
     .product-card .company-name {
       font-size: 13px;
       color: #555;
       margin-bottom: 8px;
     }
-    
+
     .product-card .rating {
       margin-bottom: 8px;
     }
-    
+
     .product-card .rating .stars {
       color: #FFD700;
       font-size: 13px;
     }
-    
+
     .product-card .rating .count {
       font-size: 12px;
       color: #888;
     }
-    
+
     .product-card .exports-to {
       font-size: 11px;
       color: #999;
       margin-bottom: 12px;
     }
-    
+
     .product-card .exports-to i {
       color: #006400;
       font-size: 10px;
     }
-    
+
     .product-card .btn-get-price {
       display: block;
       width: 100%;
@@ -147,19 +147,19 @@
       cursor: pointer;
       transition: all 0.3s;
     }
-    
+
     .product-card .btn-get-price:hover {
       background: #FFC107;
       transform: scale(1.02);
     }
-    
+
     .product-card .certifications {
       margin-top: 8px;
       display: flex;
       gap: 5px;
       flex-wrap: wrap;
     }
-    
+
     .product-card .cert-badge {
       font-size: 10px;
       padding: 3px 8px;
@@ -168,7 +168,7 @@
       color: #006400;
       font-weight: 600;
     }
-    
+
     .product-card .moq {
       font-size: 11px;
       color: #C62828;
@@ -184,18 +184,18 @@
       box-shadow: 0 2px 15px rgba(0,0,0,0.08);
       margin-bottom: 20px;
     }
-    
+
     .filter-sidebar h5 {
       font-weight: 600;
       margin-bottom: 15px;
       padding-bottom: 10px;
       border-bottom: 2px solid #006400;
     }
-    
+
     .filter-group {
       margin-bottom: 20px;
     }
-    
+
     .filter-group label {
       font-weight: 600;
       font-size: 13px;
@@ -203,11 +203,11 @@
       margin-bottom: 5px;
       display: block;
     }
-    
+
     .filter-group .form-check {
       margin-bottom: 5px;
     }
-    
+
     .filter-group .form-check-label {
       font-size: 13px;
       color: #555;
@@ -226,11 +226,11 @@
       justify-content: center;
       align-items: center;
     }
-    
+
     .rfq-modal.show {
       display: flex;
     }
-    
+
     .rfq-modal-content {
       background: #fff;
       border-radius: 12px;
@@ -240,12 +240,12 @@
       position: relative;
       animation: slideUp 0.3s ease;
     }
-    
+
     @keyframes slideUp {
       from { transform: translateY(50px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
-    
+
     .rfq-modal-content .close-modal {
       position: absolute;
       top: 10px;
@@ -254,12 +254,12 @@
       cursor: pointer;
       color: #999;
     }
-    
+
     .rfq-modal-content h4 {
       margin-bottom: 5px;
       color: #006400;
     }
-    
+
     .rfq-modal-content .product-summary {
       background: #f5f5f5;
       padding: 10px;
@@ -271,7 +271,7 @@
     .pagination .page-link {
       color: #006400;
     }
-    
+
     .pagination .active .page-link {
       background: #006400;
       border-color: #006400;
@@ -325,7 +325,7 @@ require_once __DIR__ . '/includes/head.php';
           <div class="col-lg-3" data-aos="fade-right">
             <div class="filter-sidebar">
               <h5><i class="bi bi-funnel"></i> Filters</h5>
-              
+
               <div class="filter-group">
                 <label>Product Category</label>
                 <select class="form-select" id="categoryFilter" onchange="applyFilters()">
@@ -683,7 +683,7 @@ require_once __DIR__ . '/includes/head.php';
       const filtered = getFilteredProducts();
       const sorted = sortProducts(filtered);
       const paginated = paginate(sorted);
-      
+
       document.getElementById('resultCount').textContent = filtered.length;
       renderProducts(paginated);
       renderPagination(filtered.length);
@@ -769,13 +769,13 @@ require_once __DIR__ . '/includes/head.php';
       const totalPages = Math.ceil(totalItems / itemsPerPage);
       const pagination = document.getElementById('pagination');
       let html = '';
-      
+
       for (let i = 1; i <= totalPages; i++) {
         html += `<li class="page-item ${i === currentPage ? 'active' : ''}">
           <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
         </li>`;
       }
-      
+
       pagination.innerHTML = html;
     }
 

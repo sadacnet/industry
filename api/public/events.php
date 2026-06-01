@@ -46,7 +46,7 @@ try {
         else $stmt->bindValue($key, $value, PDO::PARAM_STR);
     }
     $stmt->execute();
-    
+
     $events = $stmt->fetchAll();
 
     foreach ($events as &$event) {

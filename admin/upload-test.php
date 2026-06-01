@@ -7,23 +7,23 @@ require_once __DIR__ . '/includes/header.php';
         <h3>📤 Upload Images</h3>
         <a href="dashboard.php" class="btn btn-info">← Back to Dashboard</a>
     </div>
-    
+
     <div id="alertArea"></div>
-    
+
     <div class="row">
         <!-- Upload Form -->
         <div class="col-lg-6">
             <div class="card" style="border: 1px solid #e0e0e0;">
                 <div class="card-body">
                     <h5 class="mb-3"><i class="bi bi-cloud-upload"></i> Upload New File</h5>
-                    
+
                     <form id="uploadForm" enctype="multipart/form-data">
                         <div class="form-group mb-3">
                             <label class="fw-bold">Select Image *</label>
                             <input type="file" class="form-control" name="file" id="fileInput" accept="image/*" required>
                             <small class="text-muted">Max size: 10MB | Formats: JPG, PNG, GIF, WebP</small>
                         </div>
-                        
+
                         <div class="form-group mb-3">
                             <label class="fw-bold">Upload Type *</label>
                             <select class="form-select" name="type" id="uploadType">
@@ -35,27 +35,27 @@ require_once __DIR__ . '/includes/header.php';
                                 <option value="document">📁 Document</option>
                             </select>
                         </div>
-                        
+
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="bi bi-upload"></i> Upload File
                         </button>
                     </form>
-                    
+
                     <!-- Preview -->
                     <div id="preview" class="text-center mt-3"></div>
-                    
+
                     <!-- Result Message -->
                     <div id="result" class="mt-3"></div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Upload Info -->
         <div class="col-lg-6">
             <div class="card" style="border: 1px solid #e0e0e0;">
                 <div class="card-body">
                     <h5 class="mb-3"><i class="bi bi-info-circle"></i> Upload Information</h5>
-                    
+
                     <table class="table table-sm">
                         <thead>
                             <tr>
@@ -97,10 +97,10 @@ require_once __DIR__ . '/includes/header.php';
                             </tr>
                         </tbody>
                     </table>
-                    
+
                     <div class="alert alert-info mt-3 mb-0">
                         <small>
-                            <i class="bi bi-lightbulb"></i> 
+                            <i class="bi bi-lightbulb"></i>
                             <strong>Tip:</strong> After uploading, copy the file path to use in product listings, company profiles, or advertisements.
                         </small>
                     </div>
@@ -118,7 +118,7 @@ require_once __DIR__ . '/includes/header.php';
             <i class="bi bi-arrow-clockwise"></i> Refresh
         </button>
     </div>
-    
+
     <div id="uploadedFiles" class="row">
         <div class="col-12 text-center py-4">
             <div class="spinner-border text-success" role="status">
@@ -136,7 +136,7 @@ require_once __DIR__ . '/includes/header.php';
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('preview').innerHTML = 
+                document.getElementById('preview').innerHTML =
                     `<p class="text-muted mb-1">Preview:</p>
                      <img src="${e.target.result}" style="max-width:200px; max-height:200px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1);">`;
             };
@@ -147,31 +147,31 @@ require_once __DIR__ . '/includes/header.php';
     // Upload form submission
     document.getElementById('uploadForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        
+
         const fileInput = document.getElementById('fileInput');
         const file = fileInput.files[0];
         const type = document.getElementById('uploadType').value;
         const resultDiv = document.getElementById('result');
-        
+
         if (!file) {
             showAlert('Please select a file first', 'error');
             return;
         }
-        
+
         const formData = new FormData();
         formData.append('file', file);
         formData.append('type', type);
-        
+
         resultDiv.innerHTML = '<div class="alert alert-info"><div class="spinner-border spinner-border-sm"></div> Uploading file...</div>';
-        
+
         try {
             const response = await fetch('/industry.co.zw/admin/api/upload.php', {
                 method: 'POST',
                 body: formData
             });
-            
+
             const data = await response.json();
-            
+
             if (data.status === 'success') {
                 resultDiv.innerHTML = `
                     <div class="alert alert-success">
@@ -186,7 +186,7 @@ require_once __DIR__ . '/includes/header.php';
                             <i class="bi bi-clipboard"></i> Copy Path
                         </button>
                     </div>`;
-                
+
                 showAlert('File uploaded successfully!', 'success');
                 loadUploadedFiles();
                 fileInput.value = '';
@@ -220,17 +220,17 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="spinner-border text-success" role="status"></div>
                 <p class="text-muted mt-2">Loading...</p>
             </div>`;
-        
+
         try {
             const response = await fetch('/industry.co.zw/api/public/gallery.php');
             const data = await response.json();
-            
+
             if (data.status === 'success' && data.data.length > 0) {
                 container.innerHTML = data.data.map(img => `
                     <div class="col-xl-3 col-md-4 col-6 mb-3">
                         <div class="card h-100">
-                            <img src="/industry.co.zw/${img.file_path}" 
-                                 class="card-img-top" 
+                            <img src="/industry.co.zw/${img.file_path}"
+                                 class="card-img-top"
                                  style="height:120px; object-fit:cover; cursor:pointer;"
                                  onclick="window.open('/industry.co.zw/${img.file_path}', '_blank')"
                                  onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect fill=%22%23ddd%22 width=%22100%22 height=%22100%22/><text y=%22.9em%22 font-size=%2290%22>🖼️</text></svg>'">

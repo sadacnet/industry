@@ -5,7 +5,7 @@
         <h3>📢 Advertisements Management</h3>
         <button class="btn btn-primary" onclick="openAddModal()">+ Add New Advertisement</button>
     </div>
-    
+
     <!-- Filter Tabs -->
     <ul class="nav nav-tabs mb-3" id="adTabs">
         <li class="nav-item"><button class="nav-link active" onclick="filterAds('all')">All Ads</button></li>
@@ -16,7 +16,7 @@
         <li class="nav-item"><button class="nav-link" onclick="filterAds('flyer')">Flyers</button></li>
         <li class="nav-item"><button class="nav-link" onclick="filterAds('poster')">Posters</button></li>
     </ul>
-    
+
     <table id="adsTable">
         <thead>
             <tr>
@@ -42,7 +42,7 @@
         <h3 id="modalTitle">Add New Advertisement</h3>
         <form id="adForm">
             <input type="hidden" id="adId">
-            
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -67,12 +67,12 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label>Title</label>
                 <input type="text" id="title" class="form-control" placeholder="e.g., Turnall Logo">
             </div>
-            
+
             <div class="row">
                 <div class="col-md-8">
                     <div class="form-group">
@@ -87,7 +87,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -111,14 +111,14 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label>Preview</label>
                 <div id="adPreview" class="text-center" style="background:#f9f9f9;padding:15px;border-radius:8px;min-height:60px;">
                     <span class="text-muted">Enter file path to see preview</span>
                 </div>
             </div>
-            
+
             <div class="form-actions">
                 <button type="button" class="btn" onclick="closeModal()">Cancel</button>
                 <button type="submit" class="btn btn-primary">Save Advertisement</button>
@@ -147,18 +147,18 @@ async function loadAds() {
 function renderAds(ads) {
     const tbody = document.querySelector('#adsTable tbody');
     if (ads.length === 0) { tbody.innerHTML = '<tr><td colspan="10">No advertisements found</td></tr>'; return; }
-    
+
     tbody.innerHTML = ads.map(a => {
         const typeColors = { logo: '#1565C0', banner: '#006400', flyer: '#E65100', poster: '#7B1FA2' };
         const typeColor = typeColors[a.type] || '#666';
         const fileExt = a.file_type ? a.file_type.toLowerCase() : '';
         const isImage = ['jpg','jpeg','png','gif','webp'].includes(fileExt);
-        
+
         return `
         <tr>
             <td>${a.id}</td>
             <td>
-                ${isImage ? 
+                ${isImage ?
                     `<img src="/industry.co.zw/${a.file_path}" style="max-height:40px;max-width:60px;border-radius:4px;cursor:pointer;" onclick="window.open('/industry.co.zw/${a.file_path}','_blank')" onerror="this.style.display='none'">` :
                     '<span class="badge bg-secondary">File</span>'}
             </td>
@@ -181,12 +181,12 @@ function filterAds(type) {
     currentFilter = type;
     document.querySelectorAll('#adTabs .nav-link').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
-    
+
     let filtered = allAds;
     if (type === 'all') filtered = allAds;
     else if (type === 'CZI' || type === 'CIFOZ') filtered = allAds.filter(a => a.stakeholder === type);
     else filtered = allAds.filter(a => a.type === type);
-    
+
     renderAds(filtered);
 }
 
@@ -213,7 +213,7 @@ async function editAd(id) {
     document.getElementById('link_url').value = ad.link_url || '';
     document.getElementById('display_order').value = ad.display_order || 0;
     document.getElementById('is_active').value = ad.is_active;
-    
+
     // Show preview
     const fileExt = (ad.file_type || '').toLowerCase();
     const isImage = ['jpg','jpeg','png','gif','webp'].includes(fileExt);
@@ -222,7 +222,7 @@ async function editAd(id) {
     } else {
         document.getElementById('adPreview').innerHTML = `<i class="bi bi-file-earmark" style="font-size:48px;color:#999;"></i><p>${ad.file_path}</p>`;
     }
-    
+
     document.getElementById('adModal').style.display = 'block';
 }
 
@@ -257,7 +257,7 @@ document.getElementById('adForm').addEventListener('submit', async function(e) {
         display_order: document.getElementById('display_order').value,
         is_active: document.getElementById('is_active').value
     };
-    
+
     const url = id ? `/industry.co.zw/admin/api/advertisements.php?id=${id}` : '/industry.co.zw/admin/api/advertisements.php';
     const method = id ? 'PUT' : 'POST';
     const res = await fetch(url, {method, headers:{'Content-Type':'application/json'}, body:JSON.stringify(formData)});

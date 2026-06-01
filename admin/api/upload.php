@@ -28,7 +28,7 @@ try {
 
     $file = $_FILES['file'];
     $type = isset($_POST['type']) ? $_POST['type'] : 'gallery';
-    
+
     // Validate file type
     $validTypes = ['logo', 'banner', 'flyer', 'poster', 'document', 'gallery'];
     if (!in_array($type, $validTypes)) {
@@ -114,7 +114,7 @@ try {
     if (move_uploaded_file($fileTmp, $uploadPath)) {
         // Return the file path relative to project root
         $relativePath = 'uploads/' . $type . 's/' . $newFileName;
-        
+
         http_response_code(200);
         echo json_encode([
             "status" => "success",
@@ -131,7 +131,7 @@ try {
     } else {
         http_response_code(500);
         echo json_encode([
-            "status" => "error", 
+            "status" => "error",
             "message" => "Failed to save file. Upload dir: " . $uploadDir . " | Tmp: " . $fileTmp
         ]);
     }

@@ -57,7 +57,7 @@ try {
         }
     }
     $stmt->execute();
-    
+
     $images = $stmt->fetchAll();
 
     // Get all categories

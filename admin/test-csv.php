@@ -7,7 +7,7 @@ require_once __DIR__ . '/includes/header.php';
         <h3>📋 CSV Header Checker</h3>
         <a href="import-csv.php" class="btn btn-info">← Back to Import</a>
     </div>
-    
+
     <form method="POST" enctype="multipart/form-data">
         <div class="card" style="border:1px solid #e0e0e0;">
             <div class="card-body">
@@ -22,7 +22,7 @@ require_once __DIR__ . '/includes/header.php';
         </div>
     </form>
 
-    <?php if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] === 0): 
+    <?php if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] === 0):
         $handle = fopen($_FILES['csv_file']['tmp_name'], 'r');
         $headers = fgetcsv($handle);
         $headersLower = array_map('strtolower', $headers);
@@ -30,7 +30,7 @@ require_once __DIR__ . '/includes/header.php';
         $firstRow = fgetcsv($handle);
         $secondRow = fgetcsv($handle);
         fclose($handle);
-        
+
         // Count total rows (rough estimate)
         $totalRows = 0;
         $handle2 = fopen($_FILES['csv_file']['tmp_name'], 'r');
@@ -38,7 +38,7 @@ require_once __DIR__ . '/includes/header.php';
         while (fgetcsv($handle2) !== false) $totalRows++;
         fclose($handle2);
     ?>
-    
+
     <!-- Summary -->
     <div class="row mt-4">
         <div class="col-md-4">
@@ -104,7 +104,7 @@ require_once __DIR__ . '/includes/header.php';
                         'State/Province' => ['directory_location__state', 'province_id', 'state', 'province'],
                         'Photos/Logo' => ['directory_photos', 'logo', 'photos', 'image'],
                     ];
-                    
+
                     foreach ($checks as $label => $possibleNames):
                         $found = false;
                         $matchedCol = '';
@@ -130,7 +130,7 @@ require_once __DIR__ . '/includes/header.php';
             </table>
         </div>
     </div>
-    
+
     <div class="mt-3">
         <a href="import-csv.php" class="btn btn-primary">Go to Import Page</a>
     </div>

@@ -47,7 +47,7 @@ function getCurrentAdmin() {
     if (!isAdminLoggedIn()) {
         return null;
     }
-    
+
     return [
         'id' => $_SESSION['admin_id'],
         'username' => $_SESSION['admin_username'],
@@ -61,10 +61,10 @@ function getCurrentAdmin() {
 function logoutAdmin() {
     // Unset all session variables
     $_SESSION = [];
-    
+
     // Destroy the session
     session_destroy();
-    
+
     // Redirect to login
     header('Location: /industry.co.zw/admin/login.php');
     exit;

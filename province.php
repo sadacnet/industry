@@ -313,19 +313,19 @@ require_once __DIR__ . '/includes/head.php';
 
           // Get rich data
           const data = provinceData[slug] || defaultData;
-          
+
           document.getElementById('overviewText').textContent = data.overview;
           document.getElementById('aboutText').textContent = data.about;
-          
+
           // Key Highlights
-          document.getElementById('keyHighlights').innerHTML = '<ul>' + 
+          document.getElementById('keyHighlights').innerHTML = '<ul>' +
             data.keyHighlights.map(h => `<li><i class="bi bi-check2-circle"></i> <span>${h}</span></li>`).join('') + '</ul>';
-          
+
           // Key Facts
-          document.getElementById('keyFacts').innerHTML = data.keyFacts.map(f => 
+          document.getElementById('keyFacts').innerHTML = data.keyFacts.map(f =>
             `<p style="margin-bottom:10px;border-bottom:1px solid #f0f0f0;padding-bottom:10px;"><strong>${f.label}:</strong><br><span style="color:#006400;font-weight:600;">${f.value}</span></p>`
           ).join('');
-          
+
           // Industries
           document.getElementById('industriesList').innerHTML = data.industries.map((ind, i) => `
             <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="${i * 100}">
@@ -336,7 +336,7 @@ require_once __DIR__ . '/includes/head.php';
               </div>
             </div>
           `).join('');
-          
+
           // Opportunities
           document.getElementById('opportunitiesList').innerHTML = data.opportunities.map((o, i) => `
             <div class="col-xl-6 d-flex" data-aos="fade-up" data-aos-delay="${i * 100}">
@@ -347,7 +347,7 @@ require_once __DIR__ . '/includes/head.php';
               </div>
             </div>
           `).join('');
-          
+
           // Infrastructure
           document.getElementById('transportInfo').textContent = data.transportInfo;
           document.getElementById('industrialParks').textContent = data.industrialParks;
@@ -361,7 +361,7 @@ require_once __DIR__ . '/includes/head.php';
       .then(d => {
         allCompanies = d.data || [];
         displayCompanies(allCompanies);
-        
+
         // Populate industry filter
         const industries = [...new Set(allCompanies.map(c => c.industry_name))];
         const select = document.getElementById('industryFilter');

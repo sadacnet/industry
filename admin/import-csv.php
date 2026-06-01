@@ -9,63 +9,63 @@ $importStakeholder = 'CZI';
 
 if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] === 0) {
     $file = $_FILES['csv_file']['tmp_name'];
-    
+
     // Detect delimiter (tab or comma)
     $sample = fread(fopen($file, 'r'), 500);
     $delimiter = (substr_count($sample, "\t") > substr_count($sample, ',')) ? "\t" : ",";
-    
+
     $handle = fopen($file, 'r');
-    
+
     // Get headers
     $headers = fgetcsv($handle, 0, $delimiter);
     $headers = array_map('strtolower', $headers);
     $headers = array_map('trim', $headers);
-    
+
     $importStakeholder = $_POST['import_stakeholder'] ?? 'CZI';
-    
+
     require_once __DIR__ . '/../api/config/database.php';
     $database = new Database();
     $db = $database->getConnection();
-    
+
     $preview = isset($_POST['preview']);
-    
+
     while (($row = fgetcsv($handle, 0, $delimiter)) !== false) {
         if (count($row) < 3) continue;
         if (count($row) > count($headers)) $row = array_slice($row, 0, count($headers));
-        
+
         $data = array_combine($headers, array_pad($row, count($headers), ''));
-        
+
         // Company name
         $companyName = trim($data['content_post_title'] ?? '');
         if (empty($companyName)) continue;
-        
+
         // Industry
         $categoryRaw = trim($data['directory_category'] ?? '');
         $categoryParts = explode(';', $categoryRaw);
         $industryName = trim($categoryParts[0]);
         $industrySlug = mapIndustry($industryName);
         $industryId = getIndustryId($db, $industrySlug);
-        
+
         // Phone
         $phone = trim($data['directory_contact__phone'] ?? '');
         if (empty($phone)) $phone = trim($data['directory_contact__mobile'] ?? '');
-        
+
         // Email
         $email = trim($data['directory_contact__email'] ?? '');
-        
+
         // Website
         $website = trim($data['directory_contact__website'] ?? '');
-        
+
         // Description - contains address, city, province
         $rawDescription = trim($data['content_body'] ?? '');
         $description = strip_tags($rawDescription);
         $description = str_replace('&nbsp;', ' ', $description);
         $description = preg_replace('/\s+/', ' ', $description);
         $description = trim($description);
-        
+
         // EXTRACT address, city, province from description
         $extracted = extractLocationInfo($description);
-        
+
         // Logo
         $logo = trim($data['directory_photos'] ?? '');
         if (strpos($logo, '|') !== false) {
@@ -77,10 +77,10 @@ if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] === 0) {
                 }
             }
         }
-        
+
         $provinceSlug = mapProvince($extracted['province']);
         $provinceId = getProvinceId($db, $provinceSlug);
-        
+
         $companyData = [
             'name' => $companyName,
             'industry_id' => $industryId,
@@ -97,14 +97,14 @@ if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] === 0) {
             'logo' => $logo,
             'is_active' => 1
         ];
-        
+
         if ($preview) {
             $previewData[] = $companyData;
         } else {
             $checkStmt = $db->prepare("SELECT id FROM companies WHERE name = :name");
             $checkStmt->execute([':name' => $companyData['name']]);
             if ($checkStmt->fetch()) { $skipped++; continue; }
-            
+
             try {
                 $stmt = $db->prepare("
                     INSERT INTO companies (name, industry_id, province_id, stakeholder, phone, email, website, logo, description, is_active)
@@ -128,7 +128,7 @@ if (isset($_FILES['csv_file']) && $_FILES['csv_file']['error'] === 0) {
             }
         }
     }
-    
+
     fclose($handle);
 }
 
@@ -139,43 +139,43 @@ function extractLocationInfo($text) {
         'city' => '',
         'province' => ''
     ];
-    
+
     $textLower = strtolower($text);
-    
+
     $cities = [
         'harare' => 'Harare', 'bulawayo' => 'Bulawayo', 'masvingo' => 'Masvingo',
         'gweru' => 'Gweru', 'mutare' => 'Mutare', 'kwekwe' => 'Kwekwe',
         'chinhoyi' => 'Chinhoyi', 'marondera' => 'Marondera', 'kadoma' => 'Kadoma',
     ];
-    
+
     foreach ($cities as $key => $name) {
         if (strpos($textLower, $key) !== false) {
             $result['city'] = $name;
             break;
         }
     }
-    
+
     $provinces = [
         'harare' => 'harare', 'bulawayo' => 'bulawayo', 'masvingo' => 'masvingo',
         'midlands' => 'midlands', 'manicaland' => 'manicaland',
         'gweru' => 'midlands', 'mutare' => 'manicaland', 'kwekwe' => 'midlands',
         'chinhoyi' => 'mashonaland-west', 'marondera' => 'mashonaland-east',
     ];
-    
+
     foreach ($provinces as $key => $slug) {
         if (strpos($textLower, $key) !== false) {
             $result['province'] = $slug;
             break;
         }
     }
-    
+
     if (empty($result['province']) && !empty($result['city'])) {
         $cityLower = strtolower($result['city']);
         if (isset($provinces[$cityLower])) {
             $result['province'] = $provinces[$cityLower];
         }
     }
-    
+
     return $result;
 }
 
@@ -280,7 +280,7 @@ function getIndustryName($db, $id) {
             </tbody>
         </table>
     </div>
-    
+
     <form method="POST" enctype="multipart/form-data" class="mt-3 d-flex gap-2">
         <input type="hidden" name="confirm" value="1">
         <input type="hidden" name="csv_data" value="<?php echo base64_encode(serialize($previewData)); ?>">
@@ -299,12 +299,12 @@ function getIndustryName($db, $id) {
     require_once __DIR__ . '/../api/config/database.php';
     $database = new Database();
     $db = $database->getConnection();
-    
+
     foreach ($previewData as $c) {
         $checkStmt = $db->prepare("SELECT id FROM companies WHERE name = :name");
         $checkStmt->execute([':name' => $c['name']]);
         if ($checkStmt->fetch()) { $skipped++; continue; }
-        
+
         try {
             $stmt = $db->prepare("
                 INSERT INTO companies (name, industry_id, province_id, stakeholder, phone, email, website, logo, description, is_active)
@@ -321,7 +321,7 @@ function getIndustryName($db, $id) {
         } catch (Exception $e) { $errors[] = $c['name'] . ': ' . $e->getMessage(); }
     }
     ?>
-    
+
     <div class="alert alert-success">
         <h5><i class="bi bi-check-circle"></i> Import Complete! (<?php echo $importStakeholder; ?>)</h5>
         <div class="row mt-3">
@@ -344,11 +344,11 @@ function getIndustryName($db, $id) {
                 </div>
             </div>
         </div>
-        
+
         <?php if (!empty($errors)): ?>
         <div class="mt-3"><h6>Errors:</h6><ul><?php foreach($errors as $e) echo "<li>$e</li>"; ?></ul></div>
         <?php endif; ?>
-        
+
         <div class="mt-3">
             <a href="members.php" class="btn btn-primary">View Imported Companies</a>
             <a href="import-csv.php" class="btn btn-secondary">Import Another File</a>
@@ -386,7 +386,7 @@ function getIndustryName($db, $id) {
             </form>
         </div>
     </div>
-    
+
     <div class="card mt-4" style="border:1px solid #e0e0e0;">
         <div class="card-body">
             <h5>📋 How It Works</h5>

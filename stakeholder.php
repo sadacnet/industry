@@ -21,7 +21,7 @@ require_once __DIR__ . '/includes/head.php';
     }
     .stakeholder-banner h1 { color: #fff; font-size: 32px; font-weight: 700; margin-bottom: 5px; }
     .stakeholder-banner p { color: rgba(255,255,255,0.85); margin: 0; font-size: 16px; }
-    
+
     .section-nav {
         background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         position: sticky; top: 70px; z-index: 99;
@@ -33,7 +33,7 @@ require_once __DIR__ . '/includes/head.php';
     }
     .section-nav a.active { color: <?php echo $orgColor; ?>; border-bottom-color: <?php echo $orgColor; ?>; }
     .section-nav a:hover { color: <?php echo $orgColor; ?>; }
-    
+
     .company-card {
         background: #fff; border-radius: 10px; padding: 20px;
         box-shadow: 0 2px 15px rgba(0,0,0,0.06); height: 100%; border: 1px solid #eee;
@@ -43,7 +43,7 @@ require_once __DIR__ . '/includes/head.php';
     .company-card h5 { font-weight: 700; margin-bottom: 4px; font-size: 16px; color: #111; }
     .company-card .info { font-size: 13px; color: #666; margin-bottom: 3px; }
     .company-card .info i { color: <?php echo $orgColor; ?>; margin-right: 5px; width: 15px; }
-    
+
     .ad-card {
         background: #fff; border-radius: 10px; overflow: hidden;
         box-shadow: 0 2px 15px rgba(0,0,0,0.06); margin-bottom: 20px; cursor: pointer;
@@ -56,7 +56,7 @@ require_once __DIR__ . '/includes/head.php';
         font-size: 11px; text-transform: uppercase; font-weight: 700;
         color: <?php echo $orgColor; ?>;
     }
-    
+
     .logo-slider-card {
         background: #fff; border-radius: 10px; border: 1px solid #e0e0e0;
         box-shadow: 0 2px 15px rgba(0,0,0,0.06); margin-bottom: 30px;
@@ -66,7 +66,7 @@ require_once __DIR__ . '/includes/head.php';
         border-radius: 10px 10px 0 0; font-weight: 700;
     }
     .logo-slider-card .swiper { padding: 20px 10px 40px; }
-    .logo-slider-card .swiper-slide { 
+    .logo-slider-card .swiper-slide {
         text-align: center; cursor: pointer;
         transition: transform 0.3s;
     }
@@ -77,7 +77,7 @@ require_once __DIR__ . '/includes/head.php';
         display: inline-block;
     }
     .logo-slider-card .swiper-slide:hover img { filter: grayscale(0%); }
-    
+
     .event-item {
         background: #fff; border-radius: 10px; padding: 20px;
         box-shadow: 0 2px 15px rgba(0,0,0,0.06); margin-bottom: 15px;
@@ -85,10 +85,10 @@ require_once __DIR__ . '/includes/head.php';
         transition: all 0.3s;
     }
     .event-item:hover { transform: translateX(3px); }
-    
+
     .empty-state { text-align: center; padding: 60px 20px; color: #999; }
     .empty-state i { font-size: 64px; display: block; margin-bottom: 15px; opacity: 0.3; }
-    
+
     .logo-img { width: 60px; height: 60px; border-radius: 8px; object-fit: contain; background: #f9f9f9; margin-bottom: 10px; }
     .logo-placeholder {
         width: 60px; height: 60px; border-radius: 8px; background: #f0f0f0;
@@ -166,7 +166,7 @@ require_once __DIR__ . '/includes/head.php';
         <?php if ($section == 'advertising'): ?>
         <div data-aos="fade-up">
           <h4 style="margin-bottom:20px;"><i class="bi bi-megaphone"></i> <?php echo $org; ?> Advertising</h4>
-          
+
           <!-- Logo Swiper Slider -->
           <div class="logo-slider-card">
             <div class="card-header"><i class="bi bi-building"></i> Member Company Logos</div>
@@ -274,7 +274,7 @@ require_once __DIR__ . '/includes/head.php';
     const API = '/industry.co.zw/api/public';
 
     document.addEventListener('DOMContentLoaded', function() {
-      
+
       // ========== DIRECTORY ==========
       if (section === 'directory') {
         // FIXED: Added &limit=500 to load all companies
@@ -288,8 +288,8 @@ require_once __DIR__ . '/includes/head.php';
               renderMembers(members);
               document.getElementById('memberSearch').addEventListener('keyup', function() {
                 const s = this.value.toLowerCase();
-                const filtered = members.filter(m => 
-                  m.name.toLowerCase().includes(s) || 
+                const filtered = members.filter(m =>
+                  m.name.toLowerCase().includes(s) ||
                   m.industry_name.toLowerCase().includes(s) ||
                   m.province_name.toLowerCase().includes(s)
                 );
@@ -310,16 +310,16 @@ require_once __DIR__ . '/includes/head.php';
       if (section === 'advertising') {
         let logos = getDemoLogos();
         let otherAds = [];
-        
+
         renderLogos(logos);
-        
+
         fetch(API + '/advertisements.php?stakeholder=' + org)
           .then(r => r.json())
           .then(d => {
             if (d.status === 'success' && d.data.length > 0) {
               let dbLogos = d.data.filter(a => a.type === 'logo');
               otherAds = d.data.filter(a => a.type !== 'logo');
-              
+
               if (dbLogos.length > 0) {
                 logos = dbLogos.map(a => ({
                   title: a.title || '',
@@ -329,14 +329,14 @@ require_once __DIR__ . '/includes/head.php';
                 renderLogos(logos);
               }
             }
-            
+
             renderAds(otherAds);
-            
+
             document.getElementById('adTypeFilter').addEventListener('change', function() {
               const t = this.value;
               renderAds(t ? otherAds.filter(a => a.type === t) : otherAds);
             });
-            
+
             if (otherAds.length === 0) {
               document.getElementById('adsList').innerHTML = '<div class="col-12 text-center py-4"><p class="text-muted">No banners, flyers, or posters yet</p></div>';
             }
@@ -386,12 +386,12 @@ require_once __DIR__ . '/includes/head.php';
     function renderLogos(logos) {
       document.getElementById('logoSliderWrapper').innerHTML = logos.map(a => `
         <div class="swiper-slide" style="cursor:pointer; padding:10px;" ${a.link_url ? `onclick="window.open('${a.link_url}','_blank')"` : ''}>
-          <img src="${a.file_path}" class="img-fluid" alt="${a.title || org + ' Logo'}" 
+          <img src="${a.file_path}" class="img-fluid" alt="${a.title || org + ' Logo'}"
                style="max-height:80px; max-width:150px; object-fit:contain;"
                onerror="this.parentElement.innerHTML='<div style=padding:20px;color:#999;font-size:12px;>' + (a.title||'Logo') + '</div>'">
           ${a.title ? '<div style="font-size:11px;color:#888;margin-top:5px;">' + a.title + '</div>' : ''}
         </div>`).join('');
-      
+
       setTimeout(() => {
         const swiperEl = document.querySelector('#logoSlider');
         if (swiperEl && window.Swiper) {

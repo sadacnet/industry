@@ -48,7 +48,9 @@
             data: [
                 { id: 1, name: "Harare", slug: "harare" },
                 { id: 2, name: "Bulawayo", slug: "bulawayo" },
-                { id: 3, name: "Manicaland", slug: "manicaland" }
+                { id: 3, name: "Manicaland", slug: "manicaland" },
+                { id: 4, name: "Mashonaland West", slug: "mashonaland-west" },
+                { id: 5, name: "Midlands", slug: "midlands" }
             ]
         },
         'api/public/tenders.php': {

@@ -29,10 +29,10 @@ try {
 
     // GET - List all members or single member
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-        
+
         // Check if single member requested
         if (isset($_GET['id'])) {
-            $query = "SELECT c.*, i.name as industry_name, p.name as province_name 
+            $query = "SELECT c.*, i.name as industry_name, p.name as province_name
                       FROM companies c
                       JOIN industries i ON c.industry_id = i.id
                       JOIN provinces p ON c.province_id = p.id
@@ -40,9 +40,9 @@ try {
             $stmt = $db->prepare($query);
             $stmt->bindParam(':id', $_GET['id'], PDO::PARAM_INT);
             $stmt->execute();
-            
+
             $member = $stmt->fetch();
-            
+
             if ($member) {
                 http_response_code(200);
                 echo json_encode(["status" => "success", "data" => $member]);
@@ -52,39 +52,39 @@ try {
             }
         } else {
             // List all members with filters
-            $query = "SELECT c.*, i.name as industry_name, p.name as province_name 
+            $query = "SELECT c.*, i.name as industry_name, p.name as province_name
                       FROM companies c
                       JOIN industries i ON c.industry_id = i.id
                       JOIN provinces p ON c.province_id = p.id
                       WHERE 1=1";
-            
+
             $params = [];
-            
+
             // Filter by industry
             if (isset($_GET['industry']) && !empty($_GET['industry'])) {
                 $query .= " AND c.industry_id = :industry_id";
                 $params[':industry_id'] = $_GET['industry'];
             }
-            
+
             // Filter by stakeholder
             if (isset($_GET['stakeholder']) && !empty($_GET['stakeholder'])) {
                 $query .= " AND c.stakeholder = :stakeholder";
                 $params[':stakeholder'] = $_GET['stakeholder'];
             }
-            
+
             // Filter by active status
             if (isset($_GET['is_active'])) {
                 $query .= " AND c.is_active = :is_active";
                 $params[':is_active'] = $_GET['is_active'];
             }
-            
+
             $query .= " ORDER BY c.created_at DESC";
-            
+
             // Pagination
             $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
             $limit = isset($_GET['limit']) ? min(50, max(1, intval($_GET['limit']))) : 20;
             $offset = ($page - 1) * $limit;
-            
+
             // Count total
             $countQuery = str_replace(
                 "SELECT c.*, i.name as industry_name, p.name as province_name",
@@ -97,12 +97,12 @@ try {
             }
             $countStmt->execute();
             $totalCount = $countStmt->fetch()['total'];
-            
+
             // Add limit
             $query .= " LIMIT :limit OFFSET :offset";
             $params[':limit'] = $limit;
             $params[':offset'] = $offset;
-            
+
             $stmt = $db->prepare($query);
             foreach ($params as $key => $value) {
                 if (is_int($value)) {
@@ -112,9 +112,9 @@ try {
                 }
             }
             $stmt->execute();
-            
+
             $members = $stmt->fetchAll();
-            
+
             http_response_code(200);
             echo json_encode([
                 "status" => "success",
@@ -132,7 +132,7 @@ try {
     // POST - Create new member
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $input = json_decode(file_get_contents('php://input'), true);
-        
+
         // Validate required fields
         $requiredFields = ['name', 'industry_id', 'province_id'];
         foreach ($requiredFields as $field) {
@@ -142,11 +142,11 @@ try {
                 exit;
             }
         }
-        
+
         // Insert member
-        $query = "INSERT INTO companies (name, industry_id, province_id, stakeholder, phone, email, website, logo, description) 
+        $query = "INSERT INTO companies (name, industry_id, province_id, stakeholder, phone, email, website, logo, description)
                   VALUES (:name, :industry_id, :province_id, :stakeholder, :phone, :email, :website, :logo, :description)";
-        
+
         $stmt = $db->prepare($query);
         $stmt->bindParam(':name', $input['name']);
         $stmt->bindParam(':industry_id', $input['industry_id']);
@@ -157,7 +157,7 @@ try {
         $stmt->bindParam(':website', $input['website']);
         $stmt->bindParam(':logo', $input['logo']);
         $stmt->bindParam(':description', $input['description']);
-        
+
         if ($stmt->execute()) {
             $newId = $db->lastInsertId();
             http_response_code(201);
@@ -179,35 +179,35 @@ try {
             echo json_encode(["status" => "error", "message" => "Member ID is required"]);
             exit;
         }
-        
+
         $input = json_decode(file_get_contents('php://input'), true);
-        
+
         // Build update query dynamically
         $updates = [];
         $params = [':id' => $_GET['id']];
-        
+
         $allowedFields = ['name', 'industry_id', 'province_id', 'stakeholder', 'phone', 'email', 'website', 'logo', 'description', 'is_active'];
-        
+
         foreach ($allowedFields as $field) {
             if (isset($input[$field])) {
                 $updates[] = "$field = :$field";
                 $params[":$field"] = $input[$field];
             }
         }
-        
+
         if (empty($updates)) {
             http_response_code(400);
             echo json_encode(["status" => "error", "message" => "No fields to update"]);
             exit;
         }
-        
+
         $query = "UPDATE companies SET " . implode(', ', $updates) . " WHERE id = :id";
-        
+
         $stmt = $db->prepare($query);
         foreach ($params as $key => $value) {
             $stmt->bindValue($key, $value);
         }
-        
+
         if ($stmt->execute()) {
             http_response_code(200);
             echo json_encode(["status" => "success", "message" => "Member updated successfully"]);
@@ -224,11 +224,11 @@ try {
             echo json_encode(["status" => "error", "message" => "Member ID is required"]);
             exit;
         }
-        
+
         $query = "DELETE FROM companies WHERE id = :id";
         $stmt = $db->prepare($query);
         $stmt->bindParam(':id', $_GET['id'], PDO::PARAM_INT);
-        
+
         if ($stmt->execute()) {
             http_response_code(200);
             echo json_encode(["status" => "success", "message" => "Member deleted successfully"]);

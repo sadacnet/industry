@@ -5,7 +5,7 @@
         <h3>📦 Products Management</h3>
         <button class="btn btn-primary" onclick="openAddModal()">+ Add New Product</button>
     </div>
-    
+
     <table id="productsTable">
         <thead>
             <tr>

@@ -20,60 +20,60 @@ requireAdminLogin();
 try {
     $database = new Database();
     $db = $database->getConnection();
-    
+
     $stats = [];
-    
+
     // Total companies
     $stmt = $db->prepare("SELECT COUNT(*) as total FROM companies");
     $stmt->execute();
     $stats['total_companies'] = $stmt->fetch()['total'];
-    
+
     // Active companies
     $stmt = $db->prepare("SELECT COUNT(*) as total FROM companies WHERE is_active = 1");
     $stmt->execute();
     $stats['active_companies'] = $stmt->fetch()['total'];
-    
+
     // Companies by stakeholder
     $stmt = $db->prepare("SELECT stakeholder, COUNT(*) as count FROM companies WHERE stakeholder IS NOT NULL GROUP BY stakeholder");
     $stmt->execute();
     $stats['stakeholders'] = $stmt->fetchAll();
-    
+
     // Total events
     $stmt = $db->prepare("SELECT COUNT(*) as total FROM events");
     $stmt->execute();
     $stats['total_events'] = $stmt->fetch()['total'];
-    
+
     // Upcoming events
     $stmt = $db->prepare("SELECT COUNT(*) as total FROM events WHERE event_date >= CURDATE()");
     $stmt->execute();
     $stats['upcoming_events'] = $stmt->fetch()['total'];
-    
+
     // Active tenders
     $stmt = $db->prepare("SELECT COUNT(*) as total FROM tenders WHERE is_active = 1 AND closing_date >= CURDATE()");
     $stmt->execute();
     $stats['active_tenders'] = $stmt->fetch()['total'];
-    
+
     // Total advertisements
     $stmt = $db->prepare("SELECT COUNT(*) as total FROM advertisements");
     $stmt->execute();
     $stats['total_advertisements'] = $stmt->fetch()['total'];
-    
+
     // Recent contact enquiries
     $stmt = $db->prepare("SELECT COUNT(*) as total FROM contact_enquiries WHERE is_read = 0");
     $stmt->execute();
     $stats['unread_messages'] = $stmt->fetch()['total'];
-    
+
     // Companies by industry
     $stmt = $db->prepare("
-        SELECT i.name, COUNT(c.id) as count 
-        FROM industries i 
-        LEFT JOIN companies c ON i.id = c.industry_id 
-        GROUP BY i.id 
+        SELECT i.name, COUNT(c.id) as count
+        FROM industries i
+        LEFT JOIN companies c ON i.id = c.industry_id
+        GROUP BY i.id
         ORDER BY count DESC
     ");
     $stmt->execute();
     $stats['companies_by_industry'] = $stmt->fetchAll();
-    
+
     http_response_code(200);
     echo json_encode(["status" => "success", "data" => $stats]);
 

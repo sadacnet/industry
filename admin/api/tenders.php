@@ -28,10 +28,10 @@ try {
 
     elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $input = json_decode(file_get_contents('php://input'), true);
-        
-        $query = "INSERT INTO tenders (title, tender_number, description, issuing_organization, category, budget, location, contact_email, contact_phone, submission_requirements, eligibility_criteria, closing_date, bid_opening_date, document_url, document_url2, document_url3, is_active) 
+
+        $query = "INSERT INTO tenders (title, tender_number, description, issuing_organization, category, budget, location, contact_email, contact_phone, submission_requirements, eligibility_criteria, closing_date, bid_opening_date, document_url, document_url2, document_url3, is_active)
                   VALUES (:title, :tender_number, :description, :issuing_organization, :category, :budget, :location, :contact_email, :contact_phone, :submission_requirements, :eligibility_criteria, :closing_date, :bid_opening_date, :document_url, :document_url2, :document_url3, :is_active)";
-        
+
         $stmt = $db->prepare($query);
         $stmt->bindParam(':title', $input['title']);
         $stmt->bindParam(':tender_number', $input['tender_number']);
@@ -50,7 +50,7 @@ try {
         $stmt->bindParam(':document_url2', $input['document_url2']);
         $stmt->bindParam(':document_url3', $input['document_url3']);
         $stmt->bindParam(':is_active', $input['is_active']);
-        
+
         if ($stmt->execute()) {
             http_response_code(201);
             echo json_encode(["status" => "success", "message" => "Tender created", "id" => $db->lastInsertId()]);
@@ -61,18 +61,18 @@ try {
         $input = json_decode(file_get_contents('php://input'), true);
         $updates = [];
         $params = [':id' => $_GET['id']];
-        
+
         $fields = ['title', 'tender_number', 'description', 'issuing_organization', 'category', 'budget', 'location', 'contact_email', 'contact_phone', 'submission_requirements', 'eligibility_criteria', 'closing_date', 'bid_opening_date', 'document_url', 'document_url2', 'document_url3', 'is_active'];
-        
+
         foreach ($fields as $field) {
             if (isset($input[$field])) {
                 $updates[] = "$field = :$field";
                 $params[":$field"] = $input[$field];
             }
         }
-        
+
         if (empty($updates)) { http_response_code(400); echo json_encode(["status" => "error", "message" => "No fields"]); exit; }
-        
+
         $query = "UPDATE tenders SET " . implode(', ', $updates) . " WHERE id = :id";
         $stmt = $db->prepare($query);
         foreach ($params as $key => $value) $stmt->bindValue($key, $value);

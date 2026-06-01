@@ -98,7 +98,7 @@ require_once __DIR__ . '/includes/head.php';
         </div>
       </div>
     </section>
-    
+
 <div class="container section-title" data-aos="fade-up">
         <h2>All Provinces</h2>
         <p>Click on any province to view companies and opportunities</p>
@@ -172,7 +172,7 @@ require_once __DIR__ . '/includes/head.php';
             const endDate = event.end_date ? ' - ' + new Date(event.end_date).toLocaleDateString('en-ZA', {day:'numeric', month:'short', year:'numeric'}) : '';
             const isUpcoming = event.is_upcoming;
             const daysUntil = event.days_until;
-            
+
             let daysBadge = '';
             if (!isUpcoming) {
               daysBadge = '<span class="badge bg-secondary">Past Event</span>';
@@ -182,11 +182,11 @@ require_once __DIR__ . '/includes/head.php';
               daysBadge = '<span class="badge bg-success">' + daysUntil + ' days away</span>';
             }
 
-            const orgBadge = event.organizer === 'CZI' ? 
-              '<span class="badge" style="background:#1565C0;">CZI</span>' : 
+            const orgBadge = event.organizer === 'CZI' ?
+              '<span class="badge" style="background:#1565C0;">CZI</span>' :
               '<span class="badge" style="background:#7B1FA2;">CIFOZ</span>';
 
-            const imageHtml = event.poster ? 
+            const imageHtml = event.poster ?
               `<img src="/industry.co.zw/${event.poster}" alt="${event.title}" style="width:100%;height:100%;object-fit:cover;">` :
               `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#006400,#001a00);color:rgba(255,255,255,0.5);">
                 <div style="text-align:center;"><i class="bi bi-calendar-event" style="font-size:50px;display:block;margin-bottom:8px;"></i>${event.organizer} Event</div>
@@ -195,7 +195,7 @@ require_once __DIR__ . '/includes/head.php';
             return `
               <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
                 <div style="background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 3px 20px rgba(0,0,0,0.08);height:100%;">
-                  
+
                   <!-- IMAGE - CLICK TO OPEN POPUP -->
                   <div style="height:350px;overflow:hidden;background:#1a1a1a;cursor:pointer;position:relative;" onclick="openPopup(${event.id})">
                     ${imageHtml}
@@ -203,7 +203,7 @@ require_once __DIR__ . '/includes/head.php';
                       <i class="bi bi-zoom-in"></i> Click to view
                     </div>
                   </div>
-                  
+
                   <!-- DETAILS -->
                   <div style="padding:20px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
@@ -216,7 +216,7 @@ require_once __DIR__ . '/includes/head.php';
                     ${event.location ? '<p style="font-size:13px;color:#666;margin-bottom:6px;"><i class="bi bi-geo-alt"></i> ' + event.location + '</p>' : ''}
                     ${event.description ? '<p style="font-size:13px;color:#888;line-height:1.5;">' + event.description.substring(0, 100) + (event.description.length > 100 ? '...' : '') + '</p>' : ''}
                   </div>
-                  
+
                 </div>
               </div>`;
           }).join('');
@@ -232,16 +232,16 @@ require_once __DIR__ . '/includes/head.php';
     function openPopup(eventId) {
       const event = eventsData.find(e => e.id == eventId);
       if (!event) return;
-      
+
       const imgSrc = event.poster ? '/industry.co.zw/' + event.poster : '';
-      
+
       if (imgSrc) {
         document.getElementById('popupImage').src = imgSrc;
         document.getElementById('popupImage').style.display = 'block';
       } else {
         document.getElementById('popupImage').style.display = 'none';
       }
-      
+
       document.getElementById('popupInfo').innerHTML = `
         <h4>${event.title}</h4>
         <p><i class="bi bi-building"></i> ${event.organizer}</p>
@@ -249,7 +249,7 @@ require_once __DIR__ . '/includes/head.php';
         ${event.location ? '<p><i class="bi bi-geo-alt"></i> ' + event.location + '</p>' : ''}
         ${event.description ? '<p style="margin-top:8px;">' + event.description + '</p>' : ''}
       `;
-      
+
       document.getElementById('popupModal').classList.add('show');
       document.body.style.overflow = 'hidden';
     }
