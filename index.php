@@ -60,14 +60,33 @@ require_once __DIR__ . '/includes/head.php';
   .industry-item:hover { transform: translateY(-5px); border-color: #5cb85c; }
   .industry-item h3 { font-size: 1.2rem; font-weight: 700; margin: 0; color: #333; }
 
-  .featured-logos img {
-    max-height: 60px;
-    margin: 20px;
-    filter: grayscale(100%);
-    opacity: 0.7;
-    transition: 0.3s;
+  /* Logo Slider Styles */
+  .logo-slider {
+    overflow: hidden;
+    padding: 40px 0;
+    position: relative;
   }
-  .featured-logos img:hover { filter: grayscale(0%); opacity: 1; }
+  .logo-track {
+    display: flex;
+    width: calc(250px * 10);
+    animation: scroll 40s linear infinite;
+  }
+  .logo-track:hover { animation-play-state: paused; }
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-250px * 5)); }
+  }
+  .logo-slide {
+    width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .logo-slide img {
+    max-height: 80px;
+    max-width: 180px;
+    object-fit: contain;
+  }
 </style>
 </head>
 
@@ -97,20 +116,19 @@ require_once __DIR__ . '/includes/head.php';
           <h2>Featured Companies</h2>
         </div>
         <div class="row g-4" id="industries-list">
-          <!-- Loaded via API -->
+          <!-- Top 6 sectors loaded via API -->
         </div>
       </div>
     </section>
 
-    <!-- Featured Sliders -->
+    <!-- Featured Logo Slider -->
     <section class="py-5 bg-light">
       <div class="container text-center">
         <h2 class="mb-5" style="color: #28a745; font-weight:700;">Featured Companies</h2>
-        <div class="featured-logos d-flex flex-wrap justify-content-center align-items-center">
-           <img src="assets/img/cloned/amc-n.png" alt="AMC">
-           <img src="assets/img/cloned/kwblasting-logo.png" alt="KW Blasting">
-           <img src="assets/img/cloned/speartec-logo.png" alt="Speartec">
-           <!-- More can be added -->
+        <div class="logo-slider">
+          <div class="logo-track" id="featured-slider">
+             <!-- Populated from API -->
+          </div>
         </div>
       </div>
     </section>
@@ -136,24 +154,18 @@ require_once __DIR__ . '/includes/head.php';
   <?php require_once __DIR__ . '/includes/footer.php'; ?>
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
-  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/js/main.js"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Fetch Industries
+        // Fetch Industries (Top level)
         fetch('api/public/industries.php')
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'success') {
                     const list = document.getElementById('industries-list');
                     list.innerHTML = data.data.slice(0, 6).map(ind => `
-                        <div class="col-lg-2 col-md-4 col-6">
+                        <div class="col-lg-4 col-md-6">
                             <a href="find-suppliers?type=${ind.slug}" class="text-decoration-none">
                                 <div class="industry-item">
                                     <h3>${ind.name}</h3>
@@ -164,29 +176,51 @@ require_once __DIR__ . '/includes/head.php';
                 }
             });
 
-        // Fetch Tenders
-        fetch('api/public/tenders.php?limit=3')
+        // Fetch Featured Companies for Slider
+        fetch('api/public/companies.php?featured=1')
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'success') {
-                    document.getElementById('tenders-container').innerHTML = data.data.map(t => `
-                        <div class="p-3 border-bottom">
-                            <strong>${t.title}</strong><br>
-                            <small class="text-muted">Closes: ${t.closing_date}</small>
+                    const track = document.getElementById('featured-slider');
+                    // Duplicate logos for smooth infinite scroll
+                    const items = [...data.data, ...data.data];
+                    track.innerHTML = items.map(c => `
+                        <div class="logo-slide">
+                            <img src="${c.logo || 'assets/img/industry-logo-20.png'}" alt="${c.name}">
                         </div>
                     `).join('');
                 }
             });
 
-        // Fetch Events
-        fetch('api/public/events.php?limit=3')
+        // Tenders
+        fetch('api/public/tenders.php?limit=5')
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('tenders-container').innerHTML = data.data.map(t => `
+                        <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>${t.title}</strong><br>
+                                <small class="text-muted">Closing: ${t.closing_date}</small>
+                            </div>
+                            <a href="#" class="btn btn-sm btn-outline-success">View</a>
+                        </div>
+                    `).join('');
+                }
+            });
+
+        // Events
+        fetch('api/public/events.php?limit=5')
             .then(res => res.json())
             .then(data => {
                 if (data.status === 'success') {
                     document.getElementById('events-container').innerHTML = data.data.map(e => `
                         <div class="p-3 border-bottom">
-                            <strong>${e.title}</strong><br>
-                            <small class="text-muted">${e.event_date} @ ${e.location}</small>
+                            <div class="d-flex justify-content-between">
+                                <strong>${e.title}</strong>
+                                <span class="badge bg-success">${e.event_date}</span>
+                            </div>
+                            <small class="text-muted">${e.location}</small>
                         </div>
                     `).join('');
                 }
